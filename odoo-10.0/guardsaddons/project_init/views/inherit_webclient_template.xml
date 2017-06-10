@@ -1,0 +1,32 @@
+<odoo>
+
+    <template id="web.inherit_login_layout"
+              inherit_id="web.login_layout"
+              name="Inherited Login Layout">
+        <xpath expr="//a[@href='/web/database/manager']" position="replace"></xpath>
+        <xpath expr="//a[@href='https://www.odoo.com']" position="replace"></xpath>
+        <xpath expr="//div[@class='col-md-6 col-md-offset-3 o_database_list']" position="attributes">
+            <attribute name="class">col-md-6 col-md-offset-3 o_database_list o_login_layout_margin</attribute>
+        </xpath>
+    </template>
+
+    <template id="web.inherit_login"
+              inherit_id="web.login"
+              name="Inherited Login">
+        <xpath expr="//div[@class='form-group field-db']" position="replace"></xpath>
+    </template>
+
+    <template id="web.inherit_menu_secondary"
+              inherit_id="web.menu_secondary"
+              name="Inherited Secondary Menu">
+        <xpath expr="//div[@class='o_sub_menu_footer']" position="replace"></xpath>
+    </template>
+
+    <template inherit_id="web.layout" id="web.inherit_layout">
+        <xpath expr="//title" position="replace">
+            <title t-esc="title or 'ERP'"></title>
+        </xpath>
+    </template>
+
+
+</odoo>

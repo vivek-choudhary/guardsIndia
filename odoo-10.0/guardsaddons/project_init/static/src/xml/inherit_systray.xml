@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!-- Extended contents of mail/static/src/xml/systray.xml to hide the icons-->
+    <t t-extend="mail.chat.InboxItem">
+        <t t-jquery="li.o_mail_navbar_item" t-operation="replace">
+        </t>
+    </t>
+
+    <t t-extend="mail.chat.MessagingMenu">
+        <t t-jquery="li.o_mail_navbar_item" t-operation="replace">
+        </t>
+    </t>
+
+</templates>
