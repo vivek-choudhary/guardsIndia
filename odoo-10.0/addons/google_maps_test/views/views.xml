@@ -1,0 +1,77 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="google_maps_test.list">
+      <field name="name">google_maps_test list</field>
+      <field name="model">google_maps_test.google_maps_test</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="locationName"/>
+          <field name="value"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="google_maps_test.form">
+      <field name="name">google_maps_test form</field>
+      <field name="model">google_maps_test.google_maps_test</field>
+      <field name="arch" type="xml">
+        <form name = 'Test Form View'>
+          <field name = "locationName"/>
+          <field name = "value"/>
+        </form>
+      </field>
+    </record>
+
+
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="google_maps_test.action_window">
+      <field name="name">google_maps_test window</field>
+      <field name="res_model">google_maps_test.google_maps_test</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="google_maps_test.action_server">
+      <field name="name">google_maps_test server</field>
+      <field name="model_id" ref="model_google_maps_test_google_maps_test"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <menuitem name="Google"
+              id="google_maps_test.menu_root"/>
+    <!-- menu categories -->
+
+    <menuitem name="Menu 1"
+              id="google_maps_test.menu_1"
+              parent="google_maps_test.menu_root"/>
+
+    <!--
+    <menuitem name="Menu 2" id="google_maps_test.menu_2" parent="google_maps_test.menu_root"/>
+    -->
+    <!-- actions -->
+
+    <menuitem name="List" id="google_maps_test.menu_1_list"
+              parent="google_maps_test.menu_1"
+              action="google_maps_test.action_window"/>
+    <!--
+    <menuitem name="Server to list" id="google_maps_test" parent="google_maps_test.menu_2"
+              action="google_maps_test.action_server"/>
+    -->
+  </data>
+</odoo>

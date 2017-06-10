@@ -1,0 +1,70 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    
+    <!-- <record model="ir.ui.view" id="inherit_res_partner.list">
+      <field name="name">inherit_res_partner list</field>
+      <field name="model">inherit_res_partner.inherited_res_partner</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+ -->
+    <!-- explicit form view definition -->
+    
+    <!-- <record model="ir.ui.view" id="inherit_res_partner.form">
+      <field name="name">inherit_res_partner form</field>
+      <field name="model">inherit_res_partner.inherited_res_partner</field>
+      <field name="arch" type="xml">
+        <form string="Partner">
+          <field name="name"/>
+        </form>
+      </field>
+    </record>
+     -->
+    
+
+    <!-- actions opening views on models -->
+    
+    <record model="ir.actions.act_window" id="inherit_res_partner.action_window">
+      <field name="name">inherit_res_partner window</field>
+      <field name="res_model">inherited_res_partner</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    
+
+    <!-- server action to the one above -->
+    
+    <record model="ir.actions.server" id="inherit_res_partner.action_server">
+      <field name="name">inherit_res_partner server</field>
+      <field name="model_id" ref="model_inherited_res_partner"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    
+
+    <!-- Top menu item -->
+    
+    <menuitem name="inherit_res_partner" id="inherit_res_partner.menu_root"/>
+    
+    <!-- menu categories -->
+    
+    <menuitem name="Menu 1" id="inherit_res_partner.menu_1" parent="inherit_res_partner.menu_root"/>
+    <menuitem name="Menu 2" id="inherit_res_partner.menu_2" parent="inherit_res_partner.menu_root"/>
+    
+    <!-- actions -->
+    
+    <menuitem name="List" id="inherit_res_partner.menu_1_list" parent="inherit_res_partner.menu_1"
+              action="inherit_res_partner.action_window"/>
+    <menuitem name="Server to list" id="inherit_res_partner" parent="inherit_res_partner.menu_2"
+              action="inherit_res_partner.action_server"/>
+    
+  </data>
+</odoo>
