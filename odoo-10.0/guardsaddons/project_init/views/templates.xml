@@ -1,20 +1,20 @@
 <odoo>
     <data>
 
-        <!--&lt;!&ndash; Adding group to Discuss menu to hide it to normal users&ndash;&gt;-->
+        <!-- Adding group to menu to hide it to normal users-->
         <!--<record model="ir.ui.menu" id="mail.mail_channel_menu_root_chat">-->
             <!--<field name="groups_id" eval="[(6,0,[ref('base.group_system')])]"/>-->
         <!--</record>-->
+        
+        <!-- Adding group to hide Translation Menu-->
+        <record model="ir.ui.menu" id="base.menu_translation">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_system')])]"/>
+        </record>
 
-        <!--&lt;!&ndash; Adding group to hide Translation Menu&ndash;&gt;-->
-        <!--<record model="ir.ui.menu" id="base.menu_translation">-->
-            <!--<field name="groups_id" eval="[(6,0,[ref('base.group_system')])]"/>-->
-        <!--</record>-->
-
-        <!--&lt;!&ndash; Update name of settings menu&ndash;&gt;-->
-        <!--<record model="ir.ui.menu" id="base.menu_administration">-->
-            <!--<field name="name">User Management</field>-->
-        <!--</record>-->
+        <!-- Update name of settings menu-->
+        <record model="ir.ui.menu" id="base.menu_administration">
+            <field name="name">User Management</field>
+        </record>
         <!-- -->
         <!-- To make currency 'INR' active-->
         <record model="res.currency" id="base.INR">
