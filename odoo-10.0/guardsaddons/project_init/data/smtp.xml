@@ -5,8 +5,8 @@
             <field name="smtp_host">smtp.gmail.com</field>
             <field name="smtp_port">587</field>
             <field name="smtp_encryption">starttls</field>
-            <field name="smtp_user">democrm@2sconsulting.com</field>
-            <field name="smtp_pass">navyug1234</field>
+            <field name="smtp_user">sudhanshu.gupta@navyuginfo.com</field>
+            <field name="smtp_pass">luv to laugh</field>
         </record>
     </data>
 </odoo>

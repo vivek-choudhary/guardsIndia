@@ -1,0 +1,107 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="guard_payments.payment_list">
+      <field name="name">guard_payments list</field>
+      <field name="model">guard.payments</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="bill_number"/>
+          <field name="company"/>
+          <field name="amount"/>
+          <field name="payment_date"/>
+          <field name="overdue_flag"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="guard_payments.invoice_list">
+      <field name="name">guard_invoices list</field>
+      <field name="model">guard.invoices</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="invoice_number"/>
+          <field name="customer"/>
+          <field name="amount"/>
+          <field name="overdue_flag"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="guard_payments.payment_form">
+      <field name="name">guard_payments form</field>
+      <field name="model">guard.payments</field>
+      <field name="arch" type="xml">
+        <form string="Payment Form">
+          <sheet>
+            <group colspan="4">
+              <group col="2">
+                <!--<field name="customer"/>-->
+              </group>
+            </group>
+          </sheet>
+          <div class="oe_chatter">
+              <field name="message_follower_ids" widget="mail_followers"/>
+              <field name="message_ids" widget="mail_thread"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="guard_payments.invoice_form">
+      <field name="name">guard_invoice form</field>
+      <field name="model">guard.invoices</field>
+      <field name="arch" type="xml">
+        <form string="Invoice Form">
+          <div class="oe_chatter">
+              <field name="message_follower_ids" widget="mail_followers"/>
+              <field name="message_ids" widget="mail_thread"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="guard_payments.action_window_payment">
+      <field name="name">Payments</field>
+      <field name="res_model">guard.payments</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="guard_payments.action_window_invoice">
+      <field name="name">Invoices</field>
+      <field name="res_model">guard.invoices</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="guard_payments.action_server">
+      <field name="name">guard_payments server</field>
+      <field name="model_id" ref="model_guard_payments_guard_payments"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <menuitem name="Payments" id="guard_payments.menu_root"/>
+
+    <!-- menu categories -->
+    <menuitem name="Payments" id="guard_payments.menu_1" parent="guard_payments.menu_root"/>
+
+    <!-- actions -->
+    <menuitem name="Payments" id="guard_payments.menu_payment_list" parent="guard_payments.menu_1"
+              action="guard_payments.action_window_payment"/>
+    <menuitem name="Invoices" id="guard_payments.menu_invoice_list" parent="guard_payments.menu_1"
+              action="guard_payments.action_window_invoice"/>
+
+
+  </data>
+</odoo>
