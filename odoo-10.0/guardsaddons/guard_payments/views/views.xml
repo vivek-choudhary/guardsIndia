@@ -33,10 +33,22 @@
       <field name="model">guard.payments</field>
       <field name="arch" type="xml">
         <form string="Payment Form">
+          <header>
+            <field name="payment_date" invisible="1"/>
+            <button string="Register Payment" type="object" name="register_payment" attrs="{'invisible':[('payment_date','!=',False)]}"/>
+          </header>
           <sheet>
             <group colspan="4">
               <group col="2">
-                <!--<field name="customer"/>-->
+                <field name="bill_number"/>
+                <field name="amount"/>
+                <field name="company"/>
+                <field name="due_date"/>
+                <field name="due"/>
+              </group>
+              <group col="2">
+                <field name="overdue"/>
+                <field name="overdue_flag"/>
               </group>
             </group>
           </sheet>
@@ -53,6 +65,24 @@
       <field name="model">guard.invoices</field>
       <field name="arch" type="xml">
         <form string="Invoice Form">
+          <header>
+            <!--<field name="payment_date" invisible="1"/>-->
+            <button string="Register Payment" type="object" name="register_payment"/>
+          </header>
+          <sheet>
+            <group colspan="4">
+              <group col="2">
+                <field name="customer"/>
+                <field name="invoice_number"/>
+                <field name="amount"/>
+                <field name="sales_person"/>
+                <field name="due_date"/>
+              </group>
+              <group col="2">
+              </group>
+            </group>
+          </sheet>
+
           <div class="oe_chatter">
               <field name="message_follower_ids" widget="mail_followers"/>
               <field name="message_ids" widget="mail_thread"/>
@@ -76,19 +106,6 @@
     </record>
 
     <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="guard_payments.action_server">
-      <field name="name">guard_payments server</field>
-      <field name="model_id" ref="model_guard_payments_guard_payments"/>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field>
-    </record>
-    -->
 
     <!-- Top menu item -->
     <menuitem name="Payments" id="guard_payments.menu_root"/>
