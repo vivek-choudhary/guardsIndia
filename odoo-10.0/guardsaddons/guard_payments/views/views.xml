@@ -11,6 +11,10 @@
           <field name="amount"/>
           <field name="payment_date"/>
           <field name="overdue_flag"/>
+          <button type="object"
+                  name="register_payment"
+                  string="Register Payment"
+                  attrs="{'invisible':[('payment_date','!=',False)]}"></button>
         </tree>
       </field>
     </record>
@@ -29,26 +33,29 @@
     </record>
 
     <record model="ir.ui.view" id="guard_payments.payment_form">
-      <field name="name">guard_payments form</field>
+      <field name="name">Guard Purchase Bill</field>
       <field name="model">guard.payments</field>
       <field name="arch" type="xml">
         <form string="Payment Form">
           <header>
             <field name="payment_date" invisible="1"/>
-            <button string="Register Payment" type="object" name="register_payment" attrs="{'invisible':[('payment_date','!=',False)]}"/>
+            <button string="Register Payment" type="object" name="register_payment" />
           </header>
           <sheet>
             <group colspan="4">
               <group col="2">
-                <field name="bill_number"/>
-                <field name="amount"/>
-                <field name="company"/>
+                <field name="bill_number" required="1"/>
+                <field name="bill_date" required="1"/>
+                <field name="amount" required="1"/>
+                <field name="company" required="1"/>
+                <field name="due_days" required="1"/>
                 <field name="due_date"/>
                 <field name="due"/>
+                <field name="overdue_flag" invisible="1"/>
+                <field name="overdue"/>
               </group>
               <group col="2">
-                <field name="overdue"/>
-                <field name="overdue_flag"/>
+
               </group>
             </group>
           </sheet>
@@ -114,9 +121,9 @@
     <menuitem name="Payments" id="guard_payments.menu_1" parent="guard_payments.menu_root"/>
 
     <!-- actions -->
-    <menuitem name="Payments" id="guard_payments.menu_payment_list" parent="guard_payments.menu_1"
+    <menuitem name="Purchase" id="guard_payments.menu_payment_list" parent="guard_payments.menu_1"
               action="guard_payments.action_window_payment"/>
-    <menuitem name="Invoices" id="guard_payments.menu_invoice_list" parent="guard_payments.menu_1"
+    <menuitem name="Sales" id="guard_payments.menu_invoice_list" parent="guard_payments.menu_1"
               action="guard_payments.action_window_invoice"/>
 
 

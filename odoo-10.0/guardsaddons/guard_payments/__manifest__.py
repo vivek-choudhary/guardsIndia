@@ -20,17 +20,20 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','mail'],
+    'depends': ['base','web','mail'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'views/views.xml',
-        'data/cron.xml'
-        # 'views/templates.xml',
+        'data/cron.xml',
+        'views/report.xml',
+        'security/groups.xml',
+        'views/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
         # 'demo/demo.xml',
     ],
+    'qweb': ['static/src/xml/widget.xml'],
 }

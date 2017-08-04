@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+
+        <menuitem id="purchase_pdf_report"
+                  name="Reports"
+                  parent="guard_payments.menu_root" sequence="20"/>
+
+        <record id="some-report-client-action" model="ir.actions.client">
+            <field name="name">Report Page</field>
+            <field name="tag">report.report_page</field>
+        </record>
+
+        <menuitem id="some-report-menuitem" name="Some" parent="guard_payments.purchase_pdf_report"
+                  action="some-report-client-action"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+
+        <record id="due_mail" model="mail.template">
+            <field name="name">Overdue Mail</field>
+            <field name="model_id" ref="guard_payments.model_guard_interface"/>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="subject">Payment Overdue</field>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Dear Sir,
+</p>
+<p>
+    Your payment to Guards India has gone overdue by ${ctx['days']}.
+
+    Please pay the amount soon as possible
+</p>
+<p>Yours Sincerely
+<br/>
+${ctx['company']}
+</p>
+            </field>
+        </record>
+
+
+        <record id="overdue_mail" model="mail.template">
+            <field name="name">Overdue Mail</field>
+            <field name="model_id" ref="guard_payments.model_guard_interface"/>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="subject">Payment Overdue</field>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Dear Sir,
+</p>
+<p>
+    Your payment to Guards India has gone overdue by ${ctx['days']}.
+
+    Please pay the amount soon as possible
+</p>
+<p>Yours Sincerely
+<br/>
+${ctx['company']}
+</p>
+            </field>
+        </record>
+    </data>
+</odoo>
