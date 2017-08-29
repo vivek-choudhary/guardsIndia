@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <record id="res_partner_view_inherit" model="ir.ui.view">
+      <field name="name">res.partner.inherit</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <!-- add state field in header -->
+        <xpath expr="//field[@name='website']" position="replace"/>
+        <xpath expr="//field[@name='category_id']" position="replace"/>
+        <xpath expr="//field[@name='function']" position="replace"/>
+        <xpath expr="//field[@name='fax']" position="replace"/>
+        <xpath expr="//field[@name='title']" position="replace"/>
+        <xpath expr="//field[@name='lang']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='email']" position="after">
+          <field name="email_second"/>
+          <field name="email_third"/>
+          <field name="email_fourth"/>
+        </xpath>
+
+        <xpath expr="//form/sheet/notebook" position="replace">
+        </xpath>
+
+      </field>
+    </record>
+
+
+  </data>
+</odoo>

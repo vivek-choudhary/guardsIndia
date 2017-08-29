@@ -5,12 +5,15 @@
       <field name="name">guard_payments list</field>
       <field name="model">guard.payments</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree default_order="due_date,overdue">
           <field name="bill_number"/>
+          <field name="party_company"/>
           <field name="company"/>
           <field name="amount"/>
-          <field name="payment_date"/>
-          <field name="overdue_flag"/>
+          <field name="due_days"/>
+          <field name="payment_date" invisible="1"/>
+          <field name="overdue_flag" invisible="1"/>
+          <field name="overdue"/>
           <button type="object"
                   name="register_payment"
                   string="Register Payment"
@@ -23,11 +26,19 @@
       <field name="name">guard_invoices list</field>
       <field name="model">guard.invoices</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree default_order="due_date,overdue">
           <field name="invoice_number"/>
           <field name="customer"/>
+          <field name="company"/>
+          <field name="overdue_flag" invisible="1"/>
           <field name="amount"/>
-          <field name="overdue_flag"/>
+          <field name="payment_due"/>
+          <field name="overdue"/>
+          <field name="payment_date" invisible="1"/>
+          <button type="object"
+                  name="register_payment"
+                  string="Register Payment"
+                  attrs="{'invisible':[('payment_date','!=',False)]}"></button>
         </tree>
       </field>
     </record>
@@ -39,30 +50,36 @@
         <form string="Payment Form">
           <header>
             <field name="payment_date" invisible="1"/>
-            <button string="Register Payment" type="object" name="register_payment" />
+            <button string="Register Payment" type="object"
+                    attrs="{'invisible':[('payment_date','!=',False)]}"
+                    name="register_payment" />
           </header>
           <sheet>
             <group colspan="4">
               <group col="2">
-                <field name="bill_number" required="1"/>
-                <field name="bill_date" required="1"/>
-                <field name="amount" required="1"/>
-                <field name="company" required="1"/>
-                <field name="due_days" required="1"/>
-                <field name="due_date"/>
-                <field name="due"/>
-                <field name="overdue_flag" invisible="1"/>
-                <field name="overdue"/>
+                <field name="bill_number" required="1"
+                       attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="bill_date" required="1"
+                       attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="amount" required="1"
+                       attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="company" required="1" string="Buyer Company"
+                       options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"
+                       attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="party_company" required="1" string="Seller Company"
+                       attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="due_days" required="1"
+                       attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="due_date" attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="overdue_flag" invisible="1"
+                       attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="overdue" attrs="{'invisible':[('overdue_flag','=',False)], 'readonly':[('payment_date','!=',False)]}"/>
               </group>
               <group col="2">
-
+                <field name="comment"/>
               </group>
             </group>
           </sheet>
-          <div class="oe_chatter">
-              <field name="message_follower_ids" widget="mail_followers"/>
-              <field name="message_ids" widget="mail_thread"/>
-          </div>
         </form>
       </field>
     </record>
@@ -73,43 +90,58 @@
       <field name="arch" type="xml">
         <form string="Invoice Form">
           <header>
-            <!--<field name="payment_date" invisible="1"/>-->
-            <button string="Register Payment" type="object" name="register_payment"/>
+            <field name="payment_date" invisible="1"/>
+            <button string="Register Payment" type="object"
+                    attrs="{'invisible':[('payment_date','!=',False)]}"
+                    name="register_payment"/>
           </header>
           <sheet>
             <group colspan="4">
               <group col="2">
-                <field name="customer"/>
-                <field name="invoice_number"/>
-                <field name="amount"/>
-                <field name="sales_person"/>
-                <field name="due_date"/>
+                <field name="invoice_number" required="1"
+                        attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="company" required="1"
+                       options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"
+                        attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="customer" required="1"
+                        attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="amount" required="1"
+                        attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="sales_person" required="1"
+                        attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="invoice_date" required="1"
+                        attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="payment_due" required="1"
+                        attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="due_date" attrs="{'readonly':[('payment_date','!=',False)]}"/>
+                <field name="overdue_flag" invisible="1"/>
+                <field name="overdue"
+                       attrs="{'invisible':[('overdue_flag','=',False)], 'readonly':[('payment_date','!=',False)]}"/>
               </group>
               <group col="2">
+                <field name="due"/>
+                <field name="comment"/>
               </group>
             </group>
           </sheet>
-
-          <div class="oe_chatter">
-              <field name="message_follower_ids" widget="mail_followers"/>
-              <field name="message_ids" widget="mail_thread"/>
-          </div>
         </form>
       </field>
     </record>
 
     <!-- actions opening views on models -->
     <record model="ir.actions.act_window" id="guard_payments.action_window_payment">
-      <field name="name">Payments</field>
+      <field name="name">Purchase</field>
       <field name="res_model">guard.payments</field>
       <field name="view_mode">tree,form</field>
+      <field name="domain">[('paid_flag','=',False)]</field>
     </record>
 
     <!-- actions opening views on models -->
     <record model="ir.actions.act_window" id="guard_payments.action_window_invoice">
-      <field name="name">Invoices</field>
+      <field name="name">Sales</field>
       <field name="res_model">guard.invoices</field>
       <field name="view_mode">tree,form</field>
+      <field name="domain">[('paid_flag','=',False)]</field>
     </record>
 
     <!-- server action to the one above -->
@@ -126,6 +158,51 @@
     <menuitem name="Sales" id="guard_payments.menu_invoice_list" parent="guard_payments.menu_1"
               action="guard_payments.action_window_invoice"/>
 
+
+    <!--=========================== Mail Group View ===========================================-->
+
+    <menuitem name="Mail Settings" id="guard_payments.menu_mail_settings"
+              groups='base.group_erp_manager,base.group_system' parent="guard_payments.menu_root"/>
+
+
+    <record model="ir.ui.view" id="guard_payments.mail_group_list">
+      <field name="name">Mail Group List</field>
+      <field name="model">guard.mail_group</field>
+      <field name="arch" type="xml">
+        <tree string="Mail Group List">
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="guard_payments.mail_group_form">
+      <field name="name">Mail Group Form</field>
+      <field name="model">guard.mail_group</field>
+      <field name="arch" type="xml">
+        <form string="Mail Group List">
+          <sheet>
+            <group>
+              <field name="name" required="1" readonly="1"/>
+              <field name="email_ids" string="Mails">
+                <tree editable="top">
+                  <field name="name" />
+                </tree>
+              </field>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="guard_payments.action_window_mail_group">
+      <field name="name">Mail Groups</field>
+      <field name="res_model">guard.mail_group</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem name="Mail Groups" id="guard_payments.menu_mail_groups" action="guard_payments.action_window_mail_group"
+            parent="guard_payments.menu_mail_settings"/>
 
   </data>
 </odoo>

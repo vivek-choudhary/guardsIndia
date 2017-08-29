@@ -46,6 +46,7 @@
                     };
                 }
                 if(window.odoo.define) {
+                debugger
                     odoo.define('web.csrf', function (require) {
                         var token = "<t t-esc="request.csrf_token(None)"/>";
                         var core = require('web.core');

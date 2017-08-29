@@ -1,16 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
 
-<templates id="asdfaf">
+<templates xml:space="preserve">
 
-    <t t-name="MyQWebTemplate">
+  <t t-name="ReportTemplate">
+    <div class="col-sm-12">
+      <div class="form-inline">
         <div class="form-group">
-            <div class='input-group date' id='datetimepicker1'>
-                <input type='text' class="form-control" />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
+          <label for="from-date">From</label>
+          <div class='input-group date datetimepicker '>
+            <input type='text' class="form-control" id="from"/>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
         </div>
-        <button class="my-button">ajksdlfhhasdlfjh</button>
-    </t>
+        <div class="form-group">
+          <label for="from-date">To</label>
+          <div class='input-group date datetimepicker'>
+            <input type='text' class="form-control" id="to"/>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="type">Type</label>
+          <select class="form-control" name="type" id="model-type">
+            <option value="purchase">Purchase</option>
+            <option value="sale">Sales</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="company" class="company-drop-down">Company</label>
+        </div>
+        <button class="btn btn-primary report" name="get-report">Get Report</button>
+        <button class="btn btn-primary xls-report">Download Report</button>
+      </div>
+
+      <div class="render-section" style="max-height: 500px; overflow-y: scroll; margin-top: 50px;"></div>
+    </div>
+  </t>
+
+  <t t-name="dataListPurchase">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Bill Number</th>
+          <th>Seller Company</th>
+          <th>Buyer Company</th>
+          <th>Amount</th>
+          <th>Due Days</th>
+          <th>Overdue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <t t-foreach="data" t-name="payment">
+          <tr>
+            <td><t t-esc="bill_number"/></td>
+            <td><t t-esc="party_company[1]"/></td>
+            <td><t t-esc="company[1]"/></td>
+            <td><t t-esc="amount"/></td>
+            <td><t t-esc="due_days"/></td>
+            <td><t t-esc="overdue"/></td>
+          </tr>
+        </t>
+      </tbody>
+    </table>
+  </t>
+
+  <t t-name="dataListSales">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Invoice Number</th>
+          <th>Customer</th>
+          <th>Company</th>
+          <th>Amount</th>
+          <th>Payment Due</th>
+          <th>Overdue</th>
+        </tr>
+      </thead>
+      <t t-foreach="data" t-as="pay">
+        <tr>
+          <td><t t-esc="pay.invoice_number"/></td>
+          <td><t t-esc="pay.customer[1]"/></td>
+          <td><t t-esc="pay.company[1]"/></td>
+          <td><t t-esc="pay.amount"/></td>
+          <td><t t-esc="pay.payment_due"/></td>
+          <td><t t-esc="pay.overdue"/></td>
+        </tr>
+      </t>
+    </table>
+  </t>
+
+  <t t-name="CompanyDropDown">
+    <select class="form-control" name="type" id="company">
+      <option value="all">All</option>
+      <t t-foreach="data" t-as='company'>
+        <option t-attf-value="{{company.id}}"><t t-esc="company.name"/></option>
+      </t>
+    </select>
+  </t>
 
 </templates>

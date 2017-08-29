@@ -1,11 +1,13 @@
 <odoo>
     <data>
 
-        <record id="due_mail" model="mail.template">
-            <field name="name">Overdue Mail</field>
-            <field name="model_id" ref="guard_payments.model_guard_interface"/>
-            <field name="email_to">${object.partner_id.email}</field>
-            <field name="subject">Payment Overdue</field>
+
+      <!-- ============================================================ Payments ===============================================================-->
+
+        <record id="mail_payments" model="mail.template">
+            <field name="name">Payments Mail</field>
+            <field name="subject">Payments Mail</field>
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
@@ -14,23 +16,91 @@
     Dear Sir,
 </p>
 <p>
-    Your payment to Guards India has gone overdue by ${ctx['days']}.
+    Your payments which are going overdue on the current date are:
+    Overdue payments are:
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ; height: 30px;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            </tr>
+        </thead>
 
-    Please pay the amount soon as possible
-</p>
-<p>Yours Sincerely
-<br/>
-${ctx['company']}
+        % for rec in ctx['context']['overdue_records']
+        <tr>
+            <td style="border: 1px solid ;">${rec.bill_number}</td>
+            <td style="border: 1px solid ;">${rec.party_company.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+            <td style="border: 1px solid ;">${rec.overdue}</td>
+        </tr>
+        % endfor
+    </table>
+
+    <br/><br/>
+    <!-- This week due payments-->
+    Payments due this week:
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ; height: 30px;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['current_week_due_records']
+        <tr>
+            <td style="border: 1px solid ;">${rec.bill_number}</td>
+            <td style="border: 1px solid ;">${rec.party_company.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+            <td style="border: 1px solid ;">${rec.overdue}</td>
+        </tr>
+        % endfor
+    </table>
+
+    <!-- Next week due payments-->
+    Payments due next week:
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ; height: 30px;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['next_week_due_records']
+        <tr>
+            <td style="border: 1px solid ;">${rec.bill_number}</td>
+            <td style="border: 1px solid ;">${rec.party_company.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+            <td style="border: 1px solid ;">${rec.overdue}</td>
+        </tr>
+        % endfor
+    </table>
 </p>
             </field>
         </record>
 
+      <!-- ===================================================== Payments End ===============================================================-->
 
-        <record id="overdue_mail" model="mail.template">
+
+
+
+      <!-- ===================================================== Invoices ===================================================================-->
+
+      <!-- Customer Invoice Mail -->
+
+      <!-- Sales Person Invoice Mail -->
+
+      <!-- Administrator Invoice Mail -->
+
+
+        <record id="overdue_mail_invoices" model="mail.template">
             <field name="name">Overdue Mail</field>
-            <field name="model_id" ref="guard_payments.model_guard_interface"/>
-            <field name="email_to">${object.partner_id.email}</field>
-            <field name="subject">Payment Overdue</field>
+            <field name="subject">Invoice Overdue</field>
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
@@ -39,15 +109,154 @@ ${ctx['company']}
     Dear Sir,
 </p>
 <p>
-    Your payment to Guards India has gone overdue by ${ctx['days']}.
+    Overdue invoices are:
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            </tr>
+        </thead>
 
-    Please pay the amount soon as possible
-</p>
-<p>Yours Sincerely
-<br/>
-${ctx['company']}
+        % for rec in ctx['context']['overdue_records']
+        <tr>
+            <td style="border: 1px solid ;">${rec.invoice_number}</td>
+            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+            <td style="border: 1px solid ;">${rec.overdue}</td>
+        </tr>
+        % endfor
+    </table>
 </p>
             </field>
         </record>
+
+
+        <record id="due_mail_invoices" model="mail.template">
+            <field name="name">Due Mail</field>
+            <field name="subject">Invoice Due</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Dear Sir,
+</p>
+<p>
+    Due payments are:
+    <table style="border: 1px solid ;">
+        <thead><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['due_records']
+        <tr>
+            <td style="border: 1px solid ;">${rec.invoice_number}</td>
+            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+        </tr>
+        % endfor
+    </table>
+</p>
+            </field>
+        </record>
+
+
+        <!-- =========================== Customer Mails =============================================-->
+
+        <record id="due_customer_mail" model="mail.template">
+            <field name="name">Due Mail</field>
+            <field name="subject">Invoice Payment Due</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Dear Sir,
+</p>
+<p>
+Payment for the invoice number ${ctx['context']['record']['invoice_number']}
+    of amount ${ctx['context']['record']['amount']}
+    dated ${ctx['context']['record']['invoice_date']}
+    is due by ${ctx['context']['record']['due_date']}
+
+Please make the payment before the due date.
+</p>
+         <br/>
+<p>
+${ctx['context']['record']['company']['name']}<br/>
+${ctx['context']['record']['company']['email']}<br/>
+${ctx['context']['record']['company']['phone']}<br/>
+</p>
+            </field>
+        </record>
+
+
+        <record id="overdue_customer_mail" model="mail.template">
+            <field name="name">Overdue Mail</field>
+            <field name="subject">Invoice Payment Overdue</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Dear Sir,
+</p>
+<p>
+Payment for the invoice number ${ctx['context']['record']['invoice_number']}
+    of amount ${ctx['context']['record']['amount']}
+    dated ${ctx['context']['record']['invoice_date']}
+    is overdue by ${ctx['context']['record']['overdue']}
+<br/>
+Please make the payment as soon as possible.
+</p>
+<p>
+${ctx['context']['record']['company']['name']}<br/>
+${ctx['context']['record']['company']['email']}<br/>
+${ctx['context']['record']['company']['phone']}<br/>
+</p>
+
+            </field>
+        </record>
+
+
+
+        <!-- ========================= Sale Person Mail =====================================-->
+
+
+        <record id="saleperson_mail" model="mail.template">
+            <field name="name">Sale Person Mail</field>
+            <field name="subject">Invoice Payment Overdue/ Due</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Hello ${ctx['context']['record']['sales_person']['name']},
+</p>
+<p>
+Payment for the invoice number <b>${ctx['context']['record']['invoice_number']}</b><br/>
+    of amount <b>${ctx['context']['record']['amount']}</b><br/>
+    dated <b>${ctx['context']['record']['invoice_date']}</b><br/>
+    % if ctx['context']['record']['overdue_flag']
+    is overdue by <b>${ctx['context']['record']['overdue']}</b>
+    % else
+    is due on <b>${ctx['context']['record']['due_date']}</b>
+    % endif
+<br/>
+Please follow up for the payment.
+</p>
+            </field>
+        </record>
+
+
     </data>
 </odoo>

@@ -1,0 +1,11 @@
+<odoo>
+  <data>
+
+    <record model="res.company" id="infratech_company">
+      <field name="name">Infratech</field>
+      <field name="rml_header1">Infratech</field>
+      <field name="email">infratech@gmail.com</field>
+    </record>
+
+  </data>
+</odoo>
