@@ -16,8 +16,8 @@
     Dear Sir,
 </p>
 <p>
-    Your payments which are going overdue on the current date are:
-    Overdue payments are:
+    % if ctx['context']['overdue_records']|length
+    Your payments which are going overdue on the current date are:<br/><br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
@@ -36,10 +36,13 @@
         </tr>
         % endfor
     </table>
+    % endif
 
     <br/><br/>
     <!-- This week due payments-->
+    % if ctx['context']['current_week_due_records']|length
     Payments due this week:
+    <br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
@@ -58,9 +61,13 @@
         </tr>
         % endfor
     </table>
+    % endif
 
+    <br/><br/>
     <!-- Next week due payments-->
+    % if ctx['context']['next_week_due_records']|length
     Payments due next week:
+    <br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
@@ -79,6 +86,8 @@
         </tr>
         % endfor
     </table>
+    % endif
+
 </p>
             </field>
         </record>
@@ -92,14 +101,9 @@
 
       <!-- Customer Invoice Mail -->
 
-      <!-- Sales Person Invoice Mail -->
-
-      <!-- Administrator Invoice Mail -->
-
-
-        <record id="overdue_mail_invoices" model="mail.template">
-            <field name="name">Overdue Mail</field>
-            <field name="subject">Invoice Overdue</field>
+        <record id="customer_mail" model="mail.template">
+            <field name="name">Customer Mail</field>
+            <field name="subject">Pending Payments</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
             <field name="auto_delete" eval="True"/>
@@ -109,7 +113,10 @@
     Dear Sir,
 </p>
 <p>
-    Overdue invoices are:
+    Following are the details of your payments with our company:
+    <br/>
+    % if ctx['context']['overdue']|length
+    Invoices which got overdue on the current date are:<br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
@@ -119,7 +126,7 @@
             </tr>
         </thead>
 
-        % for rec in ctx['context']['overdue_records']
+        % for rec in ctx['context']['overdue']
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
             <td style="border: 1px solid ;">${rec.customer.name}</td>
@@ -128,33 +135,20 @@
         </tr>
         % endfor
     </table>
-</p>
-            </field>
-        </record>
+    % endif
 
-
-        <record id="due_mail_invoices" model="mail.template">
-            <field name="name">Due Mail</field>
-            <field name="subject">Invoice Due</field>
-            <field name="model_id" ref="base.model_res_users"/>
-            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
-            <field name="body_html" type="xml">
-                <p>
-    Dear Sir,
-</p>
-<p>
-    Due payments are:
+    <br/><br/>
+    % if ctx['context']['due']|length
+    Invoices due this week are as follows: <br/>
     <table style="border: 1px solid ;">
-        <thead><tr>
+        <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
         </thead>
 
-        % for rec in ctx['context']['due_records']
+        % for rec in ctx['context']['due']
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
             <td style="border: 1px solid ;">${rec.customer.name}</td>
@@ -162,100 +156,163 @@
         </tr>
         % endfor
     </table>
-</p>
-            </field>
-        </record>
-
-
-        <!-- =========================== Customer Mails =============================================-->
-
-        <record id="due_customer_mail" model="mail.template">
-            <field name="name">Due Mail</field>
-            <field name="subject">Invoice Payment Due</field>
-            <field name="model_id" ref="base.model_res_users"/>
-            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
-            <field name="body_html" type="xml">
-                <p>
-    Dear Sir,
-</p>
-<p>
-Payment for the invoice number ${ctx['context']['record']['invoice_number']}
-    of amount ${ctx['context']['record']['amount']}
-    dated ${ctx['context']['record']['invoice_date']}
-    is due by ${ctx['context']['record']['due_date']}
-
-Please make the payment before the due date.
-</p>
-         <br/>
-<p>
-${ctx['context']['record']['company']['name']}<br/>
-${ctx['context']['record']['company']['email']}<br/>
-${ctx['context']['record']['company']['phone']}<br/>
-</p>
-            </field>
-        </record>
-
-
-        <record id="overdue_customer_mail" model="mail.template">
-            <field name="name">Overdue Mail</field>
-            <field name="subject">Invoice Payment Overdue</field>
-            <field name="model_id" ref="base.model_res_users"/>
-            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
-            <field name="body_html" type="xml">
-                <p>
-    Dear Sir,
-</p>
-<p>
-Payment for the invoice number ${ctx['context']['record']['invoice_number']}
-    of amount ${ctx['context']['record']['amount']}
-    dated ${ctx['context']['record']['invoice_date']}
-    is overdue by ${ctx['context']['record']['overdue']}
-<br/>
-Please make the payment as soon as possible.
-</p>
-<p>
-${ctx['context']['record']['company']['name']}<br/>
-${ctx['context']['record']['company']['email']}<br/>
-${ctx['context']['record']['company']['phone']}<br/>
-</p>
-
-            </field>
-        </record>
-
-
-
-        <!-- ========================= Sale Person Mail =====================================-->
-
-
-        <record id="saleperson_mail" model="mail.template">
-            <field name="name">Sale Person Mail</field>
-            <field name="subject">Invoice Payment Overdue/ Due</field>
-            <field name="model_id" ref="base.model_res_users"/>
-            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
-            <field name="body_html" type="xml">
-                <p>
-    Hello ${ctx['context']['record']['sales_person']['name']},
-</p>
-<p>
-Payment for the invoice number <b>${ctx['context']['record']['invoice_number']}</b><br/>
-    of amount <b>${ctx['context']['record']['amount']}</b><br/>
-    dated <b>${ctx['context']['record']['invoice_date']}</b><br/>
-    % if ctx['context']['record']['overdue_flag']
-    is overdue by <b>${ctx['context']['record']['overdue']}</b>
-    % else
-    is due on <b>${ctx['context']['record']['due_date']}</b>
     % endif
-<br/>
-Please follow up for the payment.
+
 </p>
             </field>
         </record>
+
+
+      <!-- Sales Person Invoice Mail -->
+
+
+        <record id="sale_person_mail" model="mail.template">
+            <field name="name">Sale Person Mail</field>
+            <field name="subject">Pending Payments</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Dear Sir,
+</p>
+<p>
+    Following are the details of payments you have to follow up:<br/><br/>
+
+    % if ctx['context']['overdue']|length
+    Invoices which got overdue this week are:<br/>
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['overdue']
+        <tr>
+            <td style="border: 1px solid ;">${rec.invoice_number}</td>
+            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+            <td style="border: 1px solid ;">${rec.overdue}</td>
+        </tr>
+        % endfor
+    </table>
+    % endif
+    <br/><br/>
+    % if ctx['context']['due']|length
+    Invoices which are to be followed up are: <br/>
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['due']
+        <tr>
+            <td style="border: 1px solid ;">${rec.invoice_number}</td>
+            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+        </tr>
+        % endfor
+    </table>
+    % endif
+
+</p>
+            </field>
+        </record>
+
+
+        <!-- Administrator Invoice Mail -->
+
+        <record id="admin_mail_invoices" model="mail.template">
+            <field name="name">Admin Invoices Mail</field>
+            <field name="subject">Pending Payments</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html" type="xml">
+                <p>
+    Dear Sir,
+</p>
+<p>
+    Following are the details of overdue and due payments: <br/><br/>
+
+    % if ctx['context']['overdue']|length
+    Invoices which got overdue this week are:<br/>
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['overdue']
+        <tr>
+            <td style="border: 1px solid ;">${rec.invoice_number}</td>
+            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+            <td style="border: 1px solid ;">${rec.overdue}</td>
+        </tr>
+        % endfor
+    </table>
+    % endif
+    <br/><br/>
+
+    % if ctx['context']['due_invoices_current']|length
+    Invoices due this week are as follows: <br/>
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['due_invoices_current']
+        <tr>
+            <td style="border: 1px solid ;">${rec.invoice_number}</td>
+            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+        </tr>
+        % endfor
+    </table>
+    % endif
+
+    <br/><br/>
+    % if ctx['context']['due_invoices_next']|length
+    Invoices due next week are as follows:<br/>
+    <table style="border: 1px solid ;">
+        <thead style="border: 1px solid ;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            </tr>
+        </thead>
+
+        % for rec in ctx['context']['due_invoices_next']
+        <tr>
+            <td style="border: 1px solid ;">${rec.invoice_number}</td>
+            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.due_date}</td>
+        </tr>
+        % endfor
+    </table>
+    % endif
+
+</p>
+            </field>
+        </record>
+
+
+
 
 
     </data>

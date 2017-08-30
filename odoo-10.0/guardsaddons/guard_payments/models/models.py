@@ -231,46 +231,62 @@ class GuardInvoices(models.Model):
   def _update_date(self):
     records = self.search([])
     overdue_invoices = []
-    due_invoices = []
+    due_invoices_current = []
+    due_invoices_next = []
     customer_data = {}
+    sale_person_data = {}
 
     for record in records:
+      if record.payment_date: continue
       flag, overdue = self._get_overdue_value(record)
       due_resp = self._get_due_date(record)
       customer_emails = self._get_customer_email_list(record)
 
-      obj = {}
-
       if not record.customer.id in customer_data:
-        obj['mail_to'] = customer_emails[0]
-        obj['mail_cc'] = ''.join(customer_emails[1:len(customer_emails)])
+        customer_data[record.customer.id] = {'mail_to': customer_emails[0],
+                                             'mail_cc': customer_emails[1:len(customer_emails)],
+                                             'overdue': [], 'due': []}
+
+      if not record.sales_person.id in sale_person_data:
+        sale_person_data[record.sales_person.id] = {'mail_to': record.sales_person.email, 'mail_cc':[],
+                                                    'overdue': [], 'due': []}
+
+      if overdue:
+        record.write({'overdue': '%s Day(s)' % overdue.days})
+        customer_data[record.customer.id]['overdue'].append(record)
+        sale_person_data[record.sales_person.id]['overdue'].append(record)
+        overdue_invoices.append(record)
+
+      if due_resp and due_resp.days < 14:
+        if due_resp.days < 7:
+          customer_data[record.customer.id]['due'].append(record)
+          customer_data[record.sales_person.id]['due'].append(record)
+          due_invoices_current.append(record)
+        else:
+          due_invoices_next.append(record)
+        sale_person_data[record.sales_person.id]['due'].append(record)
+
+    print customer_data
+    print sale_person_data
+    self._send_mail_to_record(customer_data, 'guard_payments.customer_mail')
+    self._send_mail_to_record(sale_person_data, 'guard_payments.sale_person_mail')
+    context = {'due_invoices_current': due_invoices_current,
+               'due_invoices_next': due_invoices_next,
+               'overdue': overdue_invoices}
+    self.send_mail('guard_payments.admin_mail_invoices', self.get_mail_list(), context)
+
 
       # record.customer.id
       # record.sales_person.id
 
-
-
-      if overdue:
-        record.write({'overdue': '%s Day(s)' % overdue.days, 'overdue_flag': flag})
-        overdue_invoices.append(record)
-        overdue_context = {'record': record}
-        self.send_mail('guard_payments.overdue_customer_mail', customer_emails ,overdue_context)
-        self.send_mail('guard_payments.saleperson_mail', [record.sales_person.email] ,overdue_context)
-
-      if due_resp:
-        due_days = self._get_due_date(record).days
-        record.write({'due': '%s Day(s)' % due_days})
-        due_context = {'record': record}
-        due_invoices.append(record)
-        if due_days < 7:
-          self.send_mail('guard_payments.due_customer_mail', customer_emails ,due_context)
-          self.send_mail('guard_payments.saleperson_mail', [record.sales_person.email] ,due_context)
-
-
-    context = {'overdue_records': overdue_invoices, 'due_records': due_invoices}
-    self.send_mail('guard_payments.overdue_mail_invoices', self.get_mail_list(), context)
-    self.send_mail('guard_payments.due_mail_i nvoices', self.get_mail_list(), context)
-
+  def _send_mail_to_record(self, record_list=[], mail_template=None):
+    for record in record_list:
+      if not len(record_list[record]['overdue']) and not len(record_list[record]['due']): continue
+      context = {'overdue': record_list[record]['overdue'], 'due': record_list[record]['due']}
+      template = self.env.ref(mail_template)
+      template.email_to = record_list[record]['mail_to']
+      template.email_cc = record_list[record]['mail_cc']
+      template.with_context(context=context).send_mail(self.sudo().id)
 
   def _get_customer_email_list(self, record):
     email = []
