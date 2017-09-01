@@ -16,6 +16,13 @@
         <xpath expr="//field[@name='lang']" position="attributes">
           <attribute name="invisible">1</attribute>
         </xpath>
+        <xpath expr="//field[@name='email']" position="attributes">
+          <attribute name="required">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='mobile']" position="attributes">
+          <attribute name="required">1</attribute>
+        </xpath>
+
         <xpath expr="//field[@name='email']" position="after">
           <field name="email_second"/>
           <field name="email_third"/>

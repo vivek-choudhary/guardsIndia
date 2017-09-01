@@ -22,6 +22,7 @@
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
@@ -31,6 +32,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.bill_number}</td>
             <td style="border: 1px solid ;">${rec.party_company.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
             <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
@@ -47,6 +49,7 @@
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
@@ -56,6 +59,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.bill_number}</td>
             <td style="border: 1px solid ;">${rec.party_company.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
             <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
@@ -72,6 +76,7 @@
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
@@ -81,6 +86,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.bill_number}</td>
             <td style="border: 1px solid ;">${rec.party_company.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
             <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
@@ -120,7 +126,7 @@
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
@@ -129,7 +135,7 @@
         % for rec in ctx['context']['overdue']
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
             <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
@@ -143,7 +149,7 @@
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
         </thead>
@@ -151,7 +157,7 @@
         % for rec in ctx['context']['due']
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
         </tr>
         % endfor
@@ -186,6 +192,7 @@
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
@@ -195,7 +202,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
             <td style="border: 1px solid ;">${rec.customer.name}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
         % endfor
@@ -208,6 +215,7 @@
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
         </thead>
@@ -216,6 +224,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
             <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
         </tr>
         % endfor
@@ -249,6 +258,7 @@
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
@@ -258,6 +268,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
             <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
             <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
@@ -272,6 +283,7 @@
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
         </thead>
@@ -280,6 +292,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
             <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
         </tr>
         % endfor
@@ -293,6 +306,7 @@
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
         </thead>
@@ -301,6 +315,7 @@
         <tr>
             <td style="border: 1px solid ;">${rec.invoice_number}</td>
             <td style="border: 1px solid ;">${rec.customer.name}</td>
+            <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
         </tr>
         % endfor
@@ -310,9 +325,6 @@
 </p>
             </field>
         </record>
-
-
-
 
 
     </data>

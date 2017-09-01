@@ -27,7 +27,7 @@
 
     # always loaded
     'data': [
-        # 'security/groups.xml',
+        'security/groups.xml',
         # 'security/ir.model.access.csv',
         'views/templates.xml',
         'views/inherit_webclient_template.xml',
