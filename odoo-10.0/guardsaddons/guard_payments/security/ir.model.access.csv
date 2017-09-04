@@ -1,3 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 interface_admin,interface_admin,guard_payments.model_guard_interface,base.user_root,1,1,1,1
 invoice_admin,invoice_admin,guard_payments.model_guard_invoices,base.user_root,1,1,1,1
+guard_payment_group_entry,Payment Entry,guard_payments.model_guard_payments,guard_payments.group_entry,1,1,1,0
+guard_interface_group_entry,Interface Entry,guard_payments.model_guard_interface,guard_payments.group_entry,1,1,1,0
+guard_invoice_group_entry,Invoice Entry,guard_payments.model_guard_invoices,guard_payments.group_entry,1,1,1,0

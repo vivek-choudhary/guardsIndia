@@ -17,7 +17,8 @@ class GuardPaymentInvoiceInterface(models.Model):
   comment = fields.Text(string='Comments')
 
   def _compute_due_date(self):
-    self.due = (datetime.strptime(self.due_date, '%Y-%m-%d') - datetime.today()).days
+    for record in self:
+      record.due = (datetime.strptime(record.due_date, '%Y-%m-%d') - datetime.today()).days
 
   def create_excel_report(self, file_name, field_names, field_display_names, report_data):
     import xlsxwriter
@@ -66,18 +67,19 @@ class GuardPayments(models.Model):
   def _compute_overdue_date(self):
     for record in self:
       flag, overdue = self._get_overdue_value(record)
-      record.overdue_flag=flag
+      record.overdue_flag = flag
       if flag:
-        record.overdue = '%s Days(s)' % overdue.days
+        record.overdue = '%s Days(s)' % (overdue.days if overdue.days > 0 else 0)
+    return True
 
   def _get_overdue_value(self, record):
     flag = False
     today = datetime.today()
     overdue = None
-    due_date = datetime.strptime(record.due_date, '%Y-%m-%d')
-    if due_date < today:
-      flag=True
+    due_date = datetime.strptime(record.due_date, '%Y-%m-%d') + timedelta(days=1)
+    if due_date < today or record.overdue > 0 :
       overdue = today - due_date
+      flag = True
 
     return flag,overdue
 
@@ -85,7 +87,7 @@ class GuardPayments(models.Model):
     for record in self:
       resp = self._get_due_date(record)
       if resp:
-        record.due = '%s Day(s)'%self._get_due_date(record).days
+        record.due = '%s Day(s)'%resp.days
 
   def _get_due_date(self, record):
     today = datetime.today()
@@ -96,8 +98,8 @@ class GuardPayments(models.Model):
   @api.onchange('due_days','bill_date')
   def _compute_due_date(self):
     if not (self.bill_date or self.due_days): return
-    self.due_date = (datetime.strptime(self.bill_date, '%Y-%m-%d') + timedelta(days=abs(self.due_days))).date()
-    self._compute_overdue_date()
+    self.due_date = (datetime.strptime(self.bill_date, '%Y-%m-%d') + timedelta(days=self.due_days)).date()
+    # self._compute_overdue_date()
 
   @api.onchange('due_date')
   def _onchange(self):
@@ -189,7 +191,7 @@ class GuardInvoices(models.Model):
   @api.onchange('payment_due')
   def _onchange_payment_date(self):
     if self.invoice_date:
-      self.due_date = datetime.strptime(self.invoice_date, '%Y-%m-%d') + timedelta(days=abs(self.payment_due))
+      self.due_date = datetime.strptime(self.invoice_date, '%Y-%m-%d') + timedelta(days=self.payment_due)
       self._compute_overdue_date()
 
   @api.onchange('due_date')
@@ -266,8 +268,6 @@ class GuardInvoices(models.Model):
           due_invoices_next.append(record)
         sale_person_data[record.sales_person.id]['due'].append(record)
 
-    print customer_data
-    print sale_person_data
     self._send_mail_to_record(customer_data, 'guard_payments.customer_mail')
     self._send_mail_to_record(sale_person_data, 'guard_payments.sale_person_mail')
     context = {'due_invoices_current': due_invoices_current,
