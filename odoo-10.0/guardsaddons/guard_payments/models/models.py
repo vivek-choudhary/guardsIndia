@@ -76,7 +76,7 @@ class GuardPayments(models.Model):
     flag = False
     today = datetime.today()
     overdue = None
-    due_date = datetime.strptime(record.due_date, '%Y-%m-%d') + timedelta(days=1)
+    due_date = datetime.strptime(record.due_date, '%Y-%m-%d')
     if due_date < today or record.overdue > 0 :
       overdue = today - due_date
       flag = True

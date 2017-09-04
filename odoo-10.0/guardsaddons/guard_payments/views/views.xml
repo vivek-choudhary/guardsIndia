@@ -74,7 +74,7 @@
                 <field name="due_days" required="1" string="Payment Due(days)"
                        attrs="{'invisible':['|',('payment_date','!=',False),('id','!=',False)]}"/>
                 <field name="due" string="Payment Due(days)"
-                       attrs="{'invisible':['|',('id','=',False),('overdue_flag','!=',False)]}"/>
+                       attrs="{'invisible':['|',('id','=',False)], 'readonly':[('id','!=',False)]}"/>
                 <field name="due_date" attrs="{'readonly':[('payment_date','!=',False)]}"/>
 
                 <field name="overdue" attrs="{'invisible':[('overdue_flag','=',False)]}"/>
@@ -119,12 +119,11 @@
                 <field name="payment_due" required="1"
                         attrs="{'invisible':['|',('payment_date','!=',False),('id','!=',False)]}"/>
                 <field name="due" string="Payment Due(days)"
-                       attrs="{'invisible':['|',('id','=',False),('overdue_flag','!=',False)], 'readonly':[('id','!=',False)]}"/>
+                       attrs="{'invisible':['|',('id','=',False)], 'readonly':[('id','!=',False)]}"/>
 
-                <field name="due_date" attrs="{'invisible':[('id','!=',False)]}"/>
+                <field name="due_date" attrs="{'readonly':[('payment_date','!=',False)]}"/>
                 <field name="overdue_flag" invisible="1"/>
-                <field name="overdue"
-                       attrs="{'invisible':['|',('overdue_flag','=',False),('payment_date','!=',False)], 'readonly':[('payment_date','!=',False)]}"/>
+                <field name="overdue"/>
               </group>
               <group col="2">
                 <field name="comment"/>
