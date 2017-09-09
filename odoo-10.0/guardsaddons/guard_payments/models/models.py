@@ -13,7 +13,7 @@ class GuardPaymentInvoiceInterface(models.Model):
   due_date = fields.Date(string='Due Date', default=fields.Date.today())
   paid_flag = fields.Boolean(string='Payment Flag', default=False)
   overdue = fields.Char(string="Overdue")
-  due = fields.Char(store=False, string='Due', compute="_compute_due_date")
+  due = fields.Integer(store=False, string='Due', compute="_compute_due_date")
   comment = fields.Text(string='Comments')
 
   def _compute_due_date(self):
@@ -96,7 +96,7 @@ class GuardPayments(models.Model):
       return due_date - today
 
   @api.onchange('due_days','bill_date')
-  def _compute_due_date(self):
+  def _compute_due_date_onchange(self):
     if not (self.bill_date or self.due_days): return
     self.due_date = (datetime.strptime(self.bill_date, '%Y-%m-%d') + timedelta(days=self.due_days)).date()
     # self._compute_overdue_date()
@@ -145,7 +145,6 @@ class GuardPayments(models.Model):
   def send_mail(self, template=None, mail_list=None, context=None):
     template_obj = self.env.ref(template)
     template_obj.email_to = ','.join(mail_list)
-    template_obj.email_from = 'Server'
     try:
       template_obj.with_context(context=context).send_mail(self.sudo().id)
     except Exception as ex:
@@ -157,11 +156,13 @@ class GuardPayments(models.Model):
     if not date:
       return False
 
-    field_names = ['bill_number','bill_date', 'party_company', 'amount', 'due_days', 'overdue']
-    field_display_names = ['Bill Number', 'Bill Date', 'Seller Company', 'Amount', 'Due Days', 'Overdue Days']
-    guard_data = self.search_read([('bill_date', '>', date['from']), ('bill_date', '<=', date['to']),('paid_flag','=',False)], field_names)
+    field_names = ['bill_number','bill_date', 'party_company', 'amount', 'due', 'overdue','overdue_flag']
+    field_display_names = ['Bill Number', 'Bill Date', 'Seller Company', 'Amount', 'Due', 'Overdue Days']
+    guard_data = self.search_read([('bill_date', '>', date['from']), ('bill_date', '<=', date['to']),
+                                   ('paid_flag','=',False)], field_names)
 
-    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names ,guard_data)
+    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names ,
+                                                                sorted(guard_data, key=lambda x: x['overdue'], reverse=True))
     return file_name
 
 
@@ -300,11 +301,14 @@ class GuardInvoices(models.Model):
     if not date:
       return False
 
-    field_names = ['invoice_number', 'invoice_date', 'customer', 'amount', 'payment_due', 'overdue']
-    field_display_names = ['Invoice Number', 'Invoice Date', 'Customer', 'Amount', 'Due Days', 'Overdue Days']
-    guard_data = self.search_read([('invoice_date', '>', date['from']), ('invoice_date', '<=', date['to']), ('paid_flag','=',False)], field_names)
+    field_names = ['invoice_number', 'invoice_date', 'customer', 'amount', 'due', 'overdue','overdue_flag']
+    field_display_names = ['Invoice Number', 'Invoice Date', 'Customer', 'Amount', 'Due', 'Overdue Days']
 
-    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names, guard_data)
+    guard_data = self.search_read([('invoice_date', '>', date['from']), ('invoice_date', '<=', date['to']),
+                                   ('paid_flag','=',False)], field_names)
+
+    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names,
+                                                                sorted(guard_data, key=lambda x: x['overdue'], reverse=True))
     return file_name
 
   def get_mail_list(self):
@@ -322,7 +326,6 @@ class GuardInvoices(models.Model):
       return
     template_obj = self.env.ref(template)
     template_obj.email_to = ','.join(mail_list)
-    template_obj.email_from = 'Server'
     try:
       template_obj.with_context(context=context).send_mail(self.sudo().id)
     except Exception as ex:
@@ -338,4 +341,3 @@ class ResPartner(models.Model):
   email_second = fields.Char(string='Second Email')
   email_third = fields.Char(string='Third Email')
   email_fourth = fields.Char(string='Fourth Email')
-

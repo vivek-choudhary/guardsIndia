@@ -49,7 +49,7 @@
           <th>Seller Company</th>
           <th>Buyer Company</th>
           <th>Amount</th>
-          <th>Due Days</th>
+          <th>Due</th>
           <th>Overdue</th>
         </tr>
       </thead>
@@ -60,7 +60,7 @@
             <td><t t-esc="party_company[1]"/></td>
             <td><t t-esc="company[1]"/></td>
             <td><t t-esc="amount"/></td>
-            <td><t t-esc="due_days"/></td>
+            <td><t t-esc="due"/></td>
             <td><t t-esc="overdue"/></td>
           </tr>
         </t>
@@ -76,7 +76,7 @@
           <th>Customer</th>
           <th>Company</th>
           <th>Amount</th>
-          <th>Payment Due</th>
+          <th>Due</th>
           <th>Overdue</th>
         </tr>
       </thead>
@@ -86,7 +86,7 @@
           <td><t t-esc="pay.customer[1]"/></td>
           <td><t t-esc="pay.company[1]"/></td>
           <td><t t-esc="pay.amount"/></td>
-          <td><t t-esc="pay.payment_due"/></td>
+          <td><t t-esc="pay.due"/></td>
           <td><t t-esc="pay.overdue"/></td>
         </tr>
       </t>

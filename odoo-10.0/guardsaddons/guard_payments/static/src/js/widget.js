@@ -73,20 +73,22 @@ openerp.guard_payments = function(instance, local) {
             var model = new instance.web.Model('guard.invoices');
             var filter = [['invoice_date','>',from_date],['invoice_date','<=',to_date], ['paid_flag','=',false]];
             if(company != 'all') filter.push(['customer','=',parseInt(company)]);
-            model.query(['invoice_number', 'invoice_date', 'customer','company', 'amount', 'payment_due', 'overdue'])
+            model.query(['invoice_number', 'invoice_date', 'customer','company',
+                'amount', 'due', 'overdue', 'overdue_flag'])
                 .filter(filter)
                 .all().then(function(data){
-                self.$('.render-section').append(QWeb.render('dataListSales', {'data': data}))
+                self.$('.render-section').append(QWeb.render('dataListSales', {'data': _.sortBy(data,'due')}))
             })
         },
         purchase_report: function(from_date, to_date, company){
             var model = new instance.web.Model('guard.payments');
             var filter = [['bill_date','>',from_date],['bill_date','<=',to_date], ['paid_flag','=',false]];
             if(company!='all') filter.push(['party_company','=',parseInt(company)]);
-            model.query(['bill_number','bill_date', 'party_company','company', 'amount', 'due_days', 'overdue'])
+            model.query(['bill_number','bill_date', 'party_company','company', 'amount',
+                'due', 'overdue', 'overdue_flag','due_flag'])
                 .filter(filter)
                 .all().then(function(data){
-                self.$('.render-section').append(QWeb.render('dataListPurchase', {'data': data}))
+                    self.$('.render-section').append(QWeb.render('dataListPurchase', {'data': _.sortBy(data,'due')}))
             })
         },
         download_report: function(){
