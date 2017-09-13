@@ -95,15 +95,16 @@ class GuardPayments(models.Model):
     if due_date > today:
       return due_date - today
 
-  @api.onchange('due_days','bill_date')
+  @api.onchange('due_date','due_days','bill_date')
   def _compute_due_date_onchange(self):
     if not (self.bill_date or self.due_days): return
     self.due_date = (datetime.strptime(self.bill_date, '%Y-%m-%d') + timedelta(days=self.due_days)).date()
-    # self._compute_overdue_date()
-
-  @api.onchange('due_date')
-  def _onchange(self):
     self._compute_overdue_date()
+    resp = self._get_due_date(self)
+    if resp:
+      self.due = resp.days
+    else:
+      self.due = 0
 
   @api.one
   def register_payment(self):
@@ -120,11 +121,11 @@ class GuardPayments(models.Model):
     next_week_due_records= []
 
     for record in records:
-      flag, overdue = self._get_overdue_value(record)
+      overdue_flag, overdue = self._get_overdue_value(record)
       due_resp = self._get_due_date(record)
       if overdue:
-        record.write({'overdue': '%s Day(s)' % overdue.days, 'overdue_flag': flag})
-        overdue_records.append(record)
+        record.write({'overdue': '%s Day(s)' % overdue.days, 'overdue_flag': overdue_flag})
+        overdue_records.append(record) if overdue.days > 0 else False
       if due_resp and due_resp.days < 7:
         current_week_due_records.append(record)
       elif due_resp and (due_resp.days > 7  and due_resp.days < 14):
@@ -189,15 +190,16 @@ class GuardInvoices(models.Model):
     self.paid_flag = True
     self.payment_date = fields.Date.today()
 
-  @api.onchange('payment_due')
+  @api.onchange('payment_due','due_date')
   def _onchange_payment_date(self):
     if self.invoice_date:
       self.due_date = datetime.strptime(self.invoice_date, '%Y-%m-%d') + timedelta(days=self.payment_due)
       self._compute_overdue_date()
-
-  @api.onchange('due_date')
-  def _onchange(self):
-    self._compute_overdue_date()
+      resp = self._get_due_date(self)
+      if resp:
+        self.due = resp.days
+      else:
+        self.due = 0
 
   def _compute_overdue_date(self):
     today = datetime.today()
@@ -206,6 +208,8 @@ class GuardInvoices(models.Model):
       record.overdue_flag=flag
       if overdue:
         record.overdue = '%s Days(s)' % overdue.days
+      else:
+        record.overdue = '0 Day(s)'
 
   def _compute_due_date(self):
     today = datetime.today()
@@ -217,8 +221,8 @@ class GuardInvoices(models.Model):
   def _get_due_date(self, record):
     today = datetime.today()
     due_date = datetime.strptime(record.due_date, '%Y-%m-%d')
-    if due_date > today:
-      return due_date - today
+    # if due_date > today:
+    return due_date - today
 
   def _get_overdue_value(self, record):
     flag = False
@@ -263,7 +267,7 @@ class GuardInvoices(models.Model):
       if due_resp and due_resp.days < 14:
         if due_resp.days < 7:
           customer_data[record.customer.id]['due'].append(record)
-          customer_data[record.sales_person.id]['due'].append(record)
+          sale_person_data[record.sales_person.id]['due'].append(record)
           due_invoices_current.append(record)
         else:
           due_invoices_next.append(record)

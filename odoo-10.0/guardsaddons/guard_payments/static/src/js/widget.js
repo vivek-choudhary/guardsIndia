@@ -71,7 +71,7 @@ openerp.guard_payments = function(instance, local) {
         },
         sale_report: function(from_date, to_date, company){
             var model = new instance.web.Model('guard.invoices');
-            var filter = [['invoice_date','>',from_date],['invoice_date','<=',to_date], ['paid_flag','=',false]];
+            var filter = ['|','&',['due_date','>',from_date],['due_date','<=',to_date],['due_date','<=',new Date().toDateString()],['paid_flag','=',false]];
             if(company != 'all') filter.push(['customer','=',parseInt(company)]);
             model.query(['invoice_number', 'invoice_date', 'customer','company',
                 'amount', 'due', 'overdue', 'overdue_flag'])
@@ -82,7 +82,7 @@ openerp.guard_payments = function(instance, local) {
         },
         purchase_report: function(from_date, to_date, company){
             var model = new instance.web.Model('guard.payments');
-            var filter = [['bill_date','>',from_date],['bill_date','<=',to_date], ['paid_flag','=',false]];
+            var filter = ['|','&',['due_date','>',from_date],['due_date','<=',to_date],['due_date','<=',new Date().toDateString()],['paid_flag','=',false]];
             if(company!='all') filter.push(['party_company','=',parseInt(company)]);
             model.query(['bill_number','bill_date', 'party_company','company', 'amount',
                 'due', 'overdue', 'overdue_flag','due_flag'])

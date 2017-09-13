@@ -51,7 +51,6 @@
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
         </thead>
 
@@ -61,7 +60,6 @@
             <td style="border: 1px solid ;">${rec.party_company.name}</td>
             <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
-            <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
         % endfor
     </table>
@@ -78,7 +76,6 @@
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
         </thead>
 
@@ -88,7 +85,6 @@
             <td style="border: 1px solid ;">${rec.party_company.name}</td>
             <td style="border: 1px solid ;">${rec.amount}</td>
             <td style="border: 1px solid ;">${rec.due_date}</td>
-            <td style="border: 1px solid ;">${rec.overdue}</td>
         </tr>
         % endfor
     </table>
@@ -109,62 +105,56 @@
 
         <record id="customer_mail" model="mail.template">
             <field name="name">Customer Mail</field>
-            <field name="subject">Pending Payments</field>
+            <field name="subject">Payment Reminder</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="mail_server_id" ref="project_init.base_smtp_settings"/>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="False"/>
             <field name="body_html" type="xml">
-                <p>
+                <div>
+<h3 style="color:red;font-style:italics">REMINDER</h3>
+<p>
     Dear Sir,
 </p>
 <p>
-    Following are the details of your payments with our company:
+    We would like to bring some payments to your notice:
     <br/>
     % if ctx['context']['overdue']|length
-    Invoices which got overdue on the current date are:<br/>
-    <table style="border: 1px solid ;">
-        <thead style="border: 1px solid ;"><tr>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
-            </tr>
-        </thead>
-
+    Following are the payment(s) which are going overdue. We would kindly request you to please make the payments as soon as possible.<br/>
+    <br/>
+    <ul>
         % for rec in ctx['context']['overdue']
-        <tr>
-            <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-            <td style="border: 1px solid ;">${rec.overdue}</td>
-        </tr>
+        <li>Payment corresponding to invoice number ${rec.invoice_number} amount to ${rec.amount} have been due on ${rec.due_date}.
+            The payment has gone overdue by ${rec.overdue}.
+        </li>
         % endfor
-    </table>
+    </ul>
+
+    % if ctx['context']['due']|length
+    <br></br>
+        <p style="">Also</p>
+    % endif
     % endif
 
     <br/><br/>
     % if ctx['context']['due']|length
-    Invoices due this week are as follows: <br/>
-    <table style="border: 1px solid ;">
-        <thead style="border: 1px solid ;"><tr>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
-            </tr>
-        </thead>
-
+    Following are the payment(s) which will get due this week. We would kindly request to make the necessary arrangements for the payments.
+    <br/>
+    <ul>
         % for rec in ctx['context']['due']
-        <tr>
-            <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-        </tr>
+        <li>
+            Payment for the Invoice number ${rec.invoice_number} of amount ${rec.amount} with a due date of ${rec.due_date}.
+        </li>
         % endfor
-    </table>
+    </ul>
     % endif
-
+<br></br>
+    Kindly take this matter at most urgent.
 </p>
+                    <br/>
+                    <p>Thanks and Regards,</p><br/>
+                    Guards India Pvt. Ltd. | Navnidhi Metalogs Pvt. Ltd.
+                </div>
             </field>
         </record>
 
@@ -193,7 +183,6 @@
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
             </tr>
         </thead>
