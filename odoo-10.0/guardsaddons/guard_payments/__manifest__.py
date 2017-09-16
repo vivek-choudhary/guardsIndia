@@ -31,6 +31,7 @@
         'views/report.xml',
         'views/templates.xml',
         'views/inherit_res_partner.xml',
+        'views/inherit_res_company.xml',
         'data/mail_group.xml',
         'data/mail_template.xml',
         'data/company_data.xml',

@@ -15,6 +15,7 @@ class GuardPaymentInvoiceInterface(models.Model):
   overdue = fields.Char(string="Overdue")
   due = fields.Integer(store=False, string='Due', compute="_compute_due_date")
   comment = fields.Text(string='Comments')
+  overdue_reminders = fields.Integer(string='Overdue Reminders')
 
   def _compute_due_date(self):
     for record in self:
@@ -240,8 +241,11 @@ class GuardInvoices(models.Model):
     overdue_invoices = []
     due_invoices_current = []
     due_invoices_next = []
-    customer_data = {}
+    customer_data_navnidhi = {}
+    customer_data_infratech = {}
     sale_person_data = {}
+    company_navnidhi = None
+    company_infratech = None
 
     for record in records:
       if record.payment_date: continue
@@ -249,31 +253,46 @@ class GuardInvoices(models.Model):
       due_resp = self._get_due_date(record)
       customer_emails = self._get_customer_email_list(record)
 
-      if not record.customer.id in customer_data:
-        customer_data[record.customer.id] = {'mail_to': customer_emails[0],
+      if 'Navnidhi' in record.company.name and not record.customer.id in customer_data_navnidhi:
+        company_navnidhi = record.company
+        customer_data_navnidhi[record.customer.id] = {'mail_to': customer_emails[0],
                                              'mail_cc': customer_emails[1:len(customer_emails)],
                                              'overdue': [], 'due': []}
+
+      if 'Infratech' in record.company.name and not record.customer.id in customer_data_infratech:
+        company_infratech = record.company
+        customer_data_infratech[record.customer.id] = {'mail_to': customer_emails[0],
+                                             'mail_cc': customer_emails[1:len(customer_emails)],
+                                             'overdue': [], 'due': []}
+
 
       if not record.sales_person.id in sale_person_data:
         sale_person_data[record.sales_person.id] = {'mail_to': record.sales_person.email, 'mail_cc':[],
                                                     'overdue': [], 'due': []}
 
       if overdue:
-        record.write({'overdue': '%s Day(s)' % overdue.days})
-        customer_data[record.customer.id]['overdue'].append(record)
+        record.write({'overdue': '%s Day(s)' % overdue.days, 'overdue_reminders': record.overdue_reminders + 1})
+        if 'Infratech' in record.company.name:
+          customer_data_infratech[record.customer.id]['overdue'].append(record)
+        elif 'Navnidhi' in record.company.name:
+          customer_data_navnidhi[record.customer.id]['overdue'].append(record)
         sale_person_data[record.sales_person.id]['overdue'].append(record)
         overdue_invoices.append(record)
 
       if due_resp and due_resp.days < 14:
         if due_resp.days < 7:
-          customer_data[record.customer.id]['due'].append(record)
+          if 'Infratech' in record.company.name:
+            customer_data_infratech[record.customer.id]['due'].append(record)
+          if 'Navnidhi' in record.company.name:
+            customer_data_navnidhi[record.customer.id]['due'].append(record)
           sale_person_data[record.sales_person.id]['due'].append(record)
           due_invoices_current.append(record)
         else:
           due_invoices_next.append(record)
         sale_person_data[record.sales_person.id]['due'].append(record)
 
-    self._send_mail_to_record(customer_data, 'guard_payments.customer_mail')
+    self._send_mail_to_record(customer_data_infratech, 'guard_payments.customer_mail', company_data=company_infratech)
+    self._send_mail_to_record(customer_data_navnidhi, 'guard_payments.customer_mail', company_data=company_navnidhi)
     self._send_mail_to_record(sale_person_data, 'guard_payments.sale_person_mail')
     context = {'due_invoices_current': due_invoices_current,
                'due_invoices_next': due_invoices_next,
@@ -281,13 +300,12 @@ class GuardInvoices(models.Model):
     self.send_mail('guard_payments.admin_mail_invoices', self.get_mail_list(), context)
 
 
-      # record.customer.id
-      # record.sales_person.id
-
-  def _send_mail_to_record(self, record_list=[], mail_template=None):
+  def _send_mail_to_record(self, record_list=[], mail_template=None, company_data = None):
     for record in record_list:
       if not len(record_list[record]['overdue']) and not len(record_list[record]['due']): continue
       context = {'overdue': record_list[record]['overdue'], 'due': record_list[record]['due']}
+      if company_data:
+        context.update({'company_data': company_data})
       template = self.env.ref(mail_template)
       template.email_to = record_list[record]['mail_to']
       template.email_cc = record_list[record]['mail_cc']
@@ -345,3 +363,10 @@ class ResPartner(models.Model):
   email_second = fields.Char(string='Second Email')
   email_third = fields.Char(string='Third Email')
   email_fourth = fields.Char(string='Fourth Email')
+
+
+class ResCompany(models.Model):
+  _inherit = 'res.company'
+
+  account_number = fields.Char(string='Account Number')
+  gstin_number = fields.Char(string='GSTIN')

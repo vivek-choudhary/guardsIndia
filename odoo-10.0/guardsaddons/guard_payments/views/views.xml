@@ -7,6 +7,7 @@
       <field name="arch" type="xml">
         <tree default_order="due_date,overdue">
           <field name="bill_number"/>
+          <field name="bill_date"/>
           <field name="party_company"/>
           <field name="company"/>
           <field name="amount"/>
@@ -28,6 +29,7 @@
       <field name="arch" type="xml">
         <tree default_order="due_date,overdue">
           <field name="invoice_number"/>
+          <field name="invoice_date"/>
           <field name="customer"/>
           <field name="company"/>
           <field name="overdue_flag" invisible="1"/>

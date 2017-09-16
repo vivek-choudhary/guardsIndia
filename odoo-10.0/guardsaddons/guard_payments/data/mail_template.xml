@@ -17,33 +17,35 @@
 </p>
 <p>
     % if ctx['context']['overdue_records']|length
-    Your payments which are going overdue on the current date are:<br/><br/>
+    <div style="text-align:center">Your payments which are going overdue on the current date are:</div><br/><br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue By</th>
             </tr>
         </thead>
 
-        % for rec in ctx['context']['overdue_records']
-        <tr>
-            <td style="border: 1px solid ;">${rec.bill_number}</td>
-            <td style="border: 1px solid ;">${rec.party_company.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-            <td style="border: 1px solid ;">${rec.overdue}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align: center">
+            % for rec in ctx['context']['overdue_records']
+            <tr>
+                <td style="border: 1px solid ;">${rec.bill_number}</td>
+                <td style="border: 1px solid ;">${rec.party_company.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+                <td style="border: 1px solid ;">${rec.overdue}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
 
     <br/><br/>
     <!-- This week due payments-->
     % if ctx['context']['current_week_due_records']|length
-    Payments due this week:
+    <div style="text-align:center">Payments due this week:</div>
     <br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
@@ -54,21 +56,23 @@
             </tr>
         </thead>
 
-        % for rec in ctx['context']['current_week_due_records']
-        <tr>
-            <td style="border: 1px solid ;">${rec.bill_number}</td>
-            <td style="border: 1px solid ;">${rec.party_company.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align:center">
+            % for rec in ctx['context']['current_week_due_records']
+            <tr>
+                <td style="border: 1px solid ;">${rec.bill_number}</td>
+                <td style="border: 1px solid ;">${rec.party_company.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
 
     <br/><br/>
     <!-- Next week due payments-->
     % if ctx['context']['next_week_due_records']|length
-    Payments due next week:
+    <div style="text-align:center">Payments due next week:</div>
     <br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
@@ -79,14 +83,16 @@
             </tr>
         </thead>
 
-        % for rec in ctx['context']['next_week_due_records']
-        <tr>
-            <td style="border: 1px solid ;">${rec.bill_number}</td>
-            <td style="border: 1px solid ;">${rec.party_company.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align: center">
+            % for rec in ctx['context']['next_week_due_records']
+            <tr>
+                <td style="border: 1px solid ;">${rec.bill_number}</td>
+                <td style="border: 1px solid ;">${rec.party_company.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
 
@@ -117,43 +123,74 @@
     Dear Sir,
 </p>
 <p>
-    We would like to bring some payments to your notice:
-    <br/>
+    We would like to bring some payments to your notice:<br/>
     % if ctx['context']['overdue']|length
-    Following are the payment(s) which are going overdue. We would kindly request you to please make the payments as soon as possible.<br/>
     <br/>
-    <ul>
-        % for rec in ctx['context']['overdue']
-        <li>Payment corresponding to invoice number ${rec.invoice_number} amount to ${rec.amount} have been due on ${rec.due_date}.
-            The payment has gone overdue by ${rec.overdue}.
-        </li>
-        % endfor
-    </ul>
+    Following are the payment(s) which are going overdue. We would kindly request you to please make the payments as soon as possible.<br/>
 
-    % if ctx['context']['due']|length
-    <br></br>
-        <p style="">Also</p>
-    % endif
+        <table style="border: 1px solid ;padding:5px 0px;color: #bf1616;">
+            <thead style="border: 1px solid ;"><tr>
+                <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+                <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Date</th>
+                <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
+                <th style="border: 1px solid ; height: 30px; width: 140px">Overdue By</th>
+                <th style="border: 1px solid ; height: 30px; width: 140px">Reminder</th>
+            </tr>
+            </thead>
+
+            <tbody style="text-align:center">
+                % for rec in ctx['context']['overdue']
+                <tr>
+                    <td style="border: 1px solid ;">${rec.invoice_number}</td>
+                    <td style="border: 1px solid ;">${rec.invoice_date}</td>
+                    <td style="border: 1px solid ;">${rec.amount}</td>
+                    <td style="border: 1px solid ;">${rec.overdue}</td>
+                    <td style="border: 1px solid ;">${rec.overdue_reminders}</td>
+                </tr>
+                % endfor
+            </tbody>
+        </table>
+
     % endif
 
     <br/><br/>
     % if ctx['context']['due']|length
     Following are the payment(s) which will get due this week. We would kindly request to make the necessary arrangements for the payments.
     <br/>
-    <ul>
-        % for rec in ctx['context']['due']
-        <li>
-            Payment for the Invoice number ${rec.invoice_number} of amount ${rec.amount} with a due date of ${rec.due_date}.
-        </li>
-        % endfor
-    </ul>
+
+    <table style="border: 1px solid; margin: 15px 0px;">
+        <thead style="border: 1px solid ;"><tr>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Date</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
+            </tr>
+        </thead>
+
+        <tbody style="text-align:center">
+            % for rec in ctx['context']['due']
+            <tr>
+                <td style="border: 1px solid ;">${rec.invoice_number}</td>
+                <td style="border: 1px solid ;">${rec.invoice_date}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+            </tr>
+            % endfor
+        </tbody>
+    </table>
+
     % endif
 <br></br>
     Kindly take this matter at most urgent.
 </p>
                     <br/>
-                    <p>Thanks and Regards,</p><br/>
-                    Guards India Pvt. Ltd. | Navnidhi Metalogs Pvt. Ltd.
+                    <p>Thanks and Regards,<br/>
+                        ${ctx['context']['company_data']['name']}<br/>
+                        Account Number: ${ctx['context']['company_data']['account_number']}<br/>
+                        GSTIN Number: ${ctx['context']['company_data']['gstin_number']}<br/>
+                        Contact: ${ctx['context']['company_data']['phone']}<br/>
+                        Email: ${ctx['context']['company_data']['email']}<br/>
+                    </p>
                 </div>
             </field>
         </record>
@@ -183,18 +220,20 @@
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue By</th>
             </tr>
         </thead>
 
-        % for rec in ctx['context']['overdue']
-        <tr>
-            <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.customer.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.overdue}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align: center">
+            % for rec in ctx['context']['overdue']
+            <tr>
+                <td style="border: 1px solid ;">${rec.invoice_number}</td>
+                <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.overdue}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
     <br/><br/>
@@ -208,15 +247,16 @@
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
         </thead>
-
-        % for rec in ctx['context']['due']
-        <tr>
-            <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.customer.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align:center">
+            % for rec in ctx['context']['due']
+            <tr>
+                <td style="border: 1px solid ;">${rec.invoice_number}</td>
+                <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
 
@@ -249,19 +289,21 @@
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
-            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Overdue By</th>
             </tr>
         </thead>
 
-        % for rec in ctx['context']['overdue']
-        <tr>
-            <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.customer.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-            <td style="border: 1px solid ;">${rec.overdue}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align: center;">
+            % for rec in ctx['context']['overdue']
+            <tr>
+                <td style="border: 1px solid ;">${rec.invoice_number}</td>
+                <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+                <td style="border: 1px solid ;">${rec.overdue}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
     <br/><br/>
@@ -277,14 +319,16 @@
             </tr>
         </thead>
 
-        % for rec in ctx['context']['due_invoices_current']
-        <tr>
-            <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.customer.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align: center;">
+            % for rec in ctx['context']['due_invoices_current']
+            <tr>
+                <td style="border: 1px solid ;">${rec.invoice_number}</td>
+                <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
 
@@ -300,14 +344,16 @@
             </tr>
         </thead>
 
-        % for rec in ctx['context']['due_invoices_next']
-        <tr>
-            <td style="border: 1px solid ;">${rec.invoice_number}</td>
-            <td style="border: 1px solid ;">${rec.customer.name}</td>
-            <td style="border: 1px solid ;">${rec.amount}</td>
-            <td style="border: 1px solid ;">${rec.due_date}</td>
-        </tr>
-        % endfor
+        <tbody style="text-align: center;">
+            % for rec in ctx['context']['due_invoices_next']
+            <tr>
+                <td style="border: 1px solid ;">${rec.invoice_number}</td>
+                <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.amount}</td>
+                <td style="border: 1px solid ;">${rec.due_date}</td>
+            </tr>
+            % endfor
+        </tbody>
     </table>
     % endif
 
