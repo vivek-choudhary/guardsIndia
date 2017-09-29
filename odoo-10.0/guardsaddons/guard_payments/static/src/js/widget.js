@@ -77,7 +77,7 @@ openerp.guard_payments = function(instance, local) {
                 'amount', 'due', 'overdue', 'overdue_flag'])
                 .filter(filter)
                 .all().then(function(data){
-                self.$('.render-section').append(QWeb.render('dataListSales', {'data': _.sortBy(data,'due')}))
+                    self.$('.render-section').append(QWeb.render('dataListSales', {'data': _.sortBy(data,'due')}))
             })
         },
         purchase_report: function(from_date, to_date, company){
@@ -98,10 +98,15 @@ openerp.guard_payments = function(instance, local) {
             var to_date = this.$('#to').val();
             var origin = self.session.origin;
             var type = this.$('#model-type').val();
+            var company_id= this.$('#company').val();
 
             data['from_date'] = from_date?from_date:'1/1/1991';
             data['to_date'] = to_date ? to_date : (new Date()).toLocaleDateString();
             data['type'] = type;
+            data['company_id']=false;
+            if(company_id!='all'){
+               data['company_id']=company_id;
+            }
 
             self.session.rpc('/guard_payments/document',data).then(function(data){
                 window.location= origin+data['url'];
@@ -110,4 +115,4 @@ openerp.guard_payments = function(instance, local) {
     });
 
     instance.web.client_actions.add('report.report_page', 'instance.guard_payments.HomePage');
-}
+};

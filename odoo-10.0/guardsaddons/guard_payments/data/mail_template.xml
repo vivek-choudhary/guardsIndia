@@ -17,7 +17,7 @@
 </p>
 <p>
     % if ctx['context']['overdue_records']|length
-    <div style="text-align:center">Your payments which are going overdue on the current date are:</div><br/><br/>
+    <div>Your payments which are going overdue on the current date are:</div><br/><br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
@@ -45,7 +45,7 @@
     <br/><br/>
     <!-- This week due payments-->
     % if ctx['context']['current_week_due_records']|length
-    <div style="text-align:center">Payments due this week:</div>
+    <div>Payments due this week:</div>
     <br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>
@@ -72,7 +72,7 @@
     <br/><br/>
     <!-- Next week due payments-->
     % if ctx['context']['next_week_due_records']|length
-    <div style="text-align:center">Payments due next week:</div>
+    <div>Payments due next week:</div>
     <br/>
     <table style="border: 1px solid ;">
         <thead style="border: 1px solid ; height: 30px;"><tr>

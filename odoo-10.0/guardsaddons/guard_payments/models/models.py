@@ -52,6 +52,7 @@ class GuardPayments(models.Model):
   _description = "Purchase Payments Module"
   _inherits = {'guard.interface': 'interface_id'}
   _rec_name = 'bill_number'
+  _order = 'paid_flag asc, due_date asc'
 
   _sql_constraints = [
         ('bill_number',
@@ -135,7 +136,8 @@ class GuardPayments(models.Model):
     context = {'overdue_records': overdue_records,
                'next_week_due_records': next_week_due_records,
                'current_week_due_records': current_week_due_records}
-    self.send_mail('guard_payments.mail_payments', self.get_mail_list(), context)
+    if len(overdue_records) or len(next_week_due_records) or len(current_week_due_records):
+      self.send_mail('guard_payments.mail_payments', self.get_mail_list(), context)
     return
 
   def get_mail_list(self):
@@ -154,17 +156,22 @@ class GuardPayments(models.Model):
     return
 
 
-  def create_excel_sheet(self, date=None):
-    if not date:
+  def create_excel_sheet(self, data=None):
+    if not data:
       return False
 
     field_names = ['bill_number','bill_date', 'party_company', 'amount', 'due', 'overdue','overdue_flag']
     field_display_names = ['Bill Number', 'Bill Date', 'Seller Company', 'Amount', 'Due', 'Overdue Days']
-    guard_data = self.search_read([('bill_date', '>', date['from']), ('bill_date', '<=', date['to']),
-                                   ('paid_flag','=',False)], field_names)
+
+    filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to']),
+                                   ('paid_flag','=',False)]
+    if data['company_id']:
+      filter_arr.append(('party_company','=',int(data['company_id'])))
+
+    guard_data = self.search_read(filter_arr, field_names)
 
     file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names ,
-                                                                sorted(guard_data, key=lambda x: x['overdue'], reverse=True))
+                                                                sorted(guard_data, key=lambda x: x['due']))
     return file_name
 
 
@@ -173,6 +180,7 @@ class GuardInvoices(models.Model):
   _description = 'Sales Invoice Module'
   _inherits = {'guard.interface': 'interface_id'}
   _rec_name = 'invoice_number'
+  _order = 'paid_flag asc, due_date asc'
   _sql_constraints = [
         ('invoice_number',
          'UNIQUE (invoice_number, customer)',
@@ -279,7 +287,7 @@ class GuardInvoices(models.Model):
         sale_person_data[record.sales_person.id]['overdue'].append(record)
         overdue_invoices.append(record)
 
-      if due_resp and due_resp.days < 14:
+      if due_resp and due_resp.days < 14 and due_resp.days > 0:
         if due_resp.days < 7:
           if 'Infratech' in record.company.name:
             customer_data_infratech[record.customer.id]['due'].append(record)
@@ -297,7 +305,8 @@ class GuardInvoices(models.Model):
     context = {'due_invoices_current': due_invoices_current,
                'due_invoices_next': due_invoices_next,
                'overdue': overdue_invoices}
-    self.send_mail('guard_payments.admin_mail_invoices', self.get_mail_list(), context)
+    if len(due_invoices_current) or len(due_invoices_next) or len(overdue_invoices):
+      self.send_mail('guard_payments.admin_mail_invoices', self.get_mail_list(), context)
 
 
   def _send_mail_to_record(self, record_list=[], mail_template=None, company_data = None):
@@ -319,18 +328,21 @@ class GuardInvoices(models.Model):
     if record.customer.email_fourth: email.append(record.customer.email_fourth)
     return  email
 
-  def create_excel_sheet(self, date=None):
-    if not date:
+  def create_excel_sheet(self, data=None):
+    if not data:
       return False
 
     field_names = ['invoice_number', 'invoice_date', 'customer', 'amount', 'due', 'overdue','overdue_flag']
     field_display_names = ['Invoice Number', 'Invoice Date', 'Customer', 'Amount', 'Due', 'Overdue Days']
+    filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to']),
+                                   ('paid_flag','=',False)]
+    if data['company_id']:
+      filter_arr.append(('party_company','=',int(data['company_id'])))
 
-    guard_data = self.search_read([('invoice_date', '>', date['from']), ('invoice_date', '<=', date['to']),
-                                   ('paid_flag','=',False)], field_names)
+    guard_data = self.search_read(filter_arr, field_names)
 
     file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names,
-                                                                sorted(guard_data, key=lambda x: x['overdue'], reverse=True))
+                                                                sorted(guard_data, key=lambda x: x['due']))
     return file_name
 
   def get_mail_list(self):

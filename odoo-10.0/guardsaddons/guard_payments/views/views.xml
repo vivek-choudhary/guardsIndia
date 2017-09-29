@@ -5,7 +5,7 @@
       <field name="name">guard_payments list</field>
       <field name="model">guard.payments</field>
       <field name="arch" type="xml">
-        <tree default_order="due_date,overdue">
+        <tree>
           <field name="bill_number"/>
           <field name="bill_date"/>
           <field name="party_company"/>
@@ -27,7 +27,7 @@
       <field name="name">guard_invoices list</field>
       <field name="model">guard.invoices</field>
       <field name="arch" type="xml">
-        <tree default_order="due_date,overdue">
+        <tree>
           <field name="invoice_number"/>
           <field name="invoice_date"/>
           <field name="customer"/>
@@ -139,7 +139,7 @@
       <field name="name">Purchase</field>
       <field name="res_model">guard.payments</field>
       <field name="view_mode">tree,form</field>
-      <field name="domain">[('paid_flag','=',False)]</field>
+      <field name="domain">[]</field>
     </record>
 
     <!-- actions opening views on models -->
@@ -147,7 +147,7 @@
       <field name="name">Sales</field>
       <field name="res_model">guard.invoices</field>
       <field name="view_mode">tree,form</field>
-      <field name="domain">[('paid_flag','=',False)]</field>
+      <field name="domain">[]</field>
     </record>
 
     <!-- server action to the one above -->

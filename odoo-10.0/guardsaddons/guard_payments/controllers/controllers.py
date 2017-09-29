@@ -30,7 +30,8 @@ class GuardPayments(http.Controller):
     elif kwargs['type'] == 'sale':
       obj = http.request.env['guard.invoices']
 
-    flag = obj.create_excel_sheet(date={'from': kwargs['from_date'], 'to': kwargs['to_date']})
+    flag = obj.create_excel_sheet(data={'from': kwargs['from_date'], 'to': kwargs['to_date'],
+                                        'company_id': kwargs['company_id']})
 
     if flag:
       return {'url': '/guard_payments/get_file'}
