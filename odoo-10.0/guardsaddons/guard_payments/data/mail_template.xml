@@ -186,7 +186,10 @@
                     <br/>
                     <p>Thanks and Regards,<br/>
                         ${ctx['context']['company_data']['name']}<br/>
-                        Account Number: ${ctx['context']['company_data']['account_number']}<br/>
+                        Bank: ${ctx['context']['company_data']['bank_name']}<br/>
+                        C/A: ${ctx['context']['company_data']['account_number']}<br/>
+                        IFSC: ${ctx['context']['company_data']['bank_ifsc']}<br/>
+                        Address: ${ctx['context']['company_data']['bank_address']}<br/>
                         GSTIN Number: ${ctx['context']['company_data']['gstin_number']}<br/>
                         Contact: ${ctx['context']['company_data']['phone']}<br/>
                         Email: ${ctx['context']['company_data']['email']}<br/>

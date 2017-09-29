@@ -382,3 +382,6 @@ class ResCompany(models.Model):
 
   account_number = fields.Char(string='Account Number')
   gstin_number = fields.Char(string='GSTIN')
+  bank_name = fields.Char(string='Bank Name')
+  bank_address = fields.Text(string='Bank Address')
+  bank_ifsc = fields.Char(string='IFSC Code')

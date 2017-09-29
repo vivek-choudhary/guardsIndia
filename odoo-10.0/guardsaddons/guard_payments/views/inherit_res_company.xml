@@ -9,8 +9,11 @@
       <field name="arch" type="xml">
         <!-- add state field in header -->
         <xpath expr="//field[@name='website']" position="after">
-          <field name="account_number"/>
           <field name="gstin_number"/>
+          <field name="bank_name"/>
+          <field name="bank_address"/>
+          <field name="account_number"/>
+          <field name="bank_ifsc"/>
         </xpath>
 
       </field>
