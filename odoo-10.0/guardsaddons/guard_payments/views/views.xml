@@ -5,16 +5,17 @@
       <field name="name">guard_payments list</field>
       <field name="model">guard.payments</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree decoration-success="paid_flag == True" decoration-warning="paid_flag == False" >
           <field name="bill_number"/>
           <field name="bill_date"/>
           <field name="party_company"/>
           <field name="company"/>
           <field name="amount"/>
-          <field name="due"/>
-          <field name="payment_date" invisible="1"/>
+          <field name="due_days" string="Payment Terms"/>
           <field name="overdue_flag" invisible="1"/>
           <field name="overdue"/>
+          <field name="paid_flag" invisible="1"/>
+          <field name="payment_date"/>
           <button type="object"
                   name="register_payment"
                   string="Register Payment"
@@ -27,16 +28,17 @@
       <field name="name">guard_invoices list</field>
       <field name="model">guard.invoices</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree decoration-success="paid_flag == True" decoration-warning="paid_flag == False">
           <field name="invoice_number"/>
           <field name="invoice_date"/>
           <field name="customer"/>
           <field name="company"/>
           <field name="overdue_flag" invisible="1"/>
           <field name="amount"/>
-          <field name="due"/>
+          <field name="payment_due" string="Payment Terms"/>
           <field name="overdue"/>
-          <field name="payment_date" invisible="1"/>
+          <field name="payment_date"/>
+          <field name="paid_flag" invisible="1"/>
           <button type="object"
                   name="register_payment"
                   string="Register Payment"

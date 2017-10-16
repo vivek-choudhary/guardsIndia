@@ -27,6 +27,7 @@
         'security/groups.xml',
         'security/ir.model.access.csv',
         'views/views.xml',
+        'views/search_views.xml',
         'data/cron.xml',
         'views/report.xml',
         'views/templates.xml',

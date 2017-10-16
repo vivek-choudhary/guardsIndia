@@ -18,10 +18,11 @@
 <p>
     % if ctx['context']['overdue_records']|length
     <div>Your payments which are going overdue on the current date are:</div><br/><br/>
-    <table style="border: 1px solid ;">
+    <table style="border: 1px solid ; text-align: center">
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue By</th>
@@ -33,6 +34,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.bill_number}</td>
                 <td style="border: 1px solid ;">${rec.party_company.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.due_date}</td>
                 <td style="border: 1px solid ;">${rec.overdue}</td>
@@ -51,6 +53,7 @@
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
@@ -61,6 +64,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.bill_number}</td>
                 <td style="border: 1px solid ;">${rec.party_company.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.due_date}</td>
             </tr>
@@ -78,6 +82,7 @@
         <thead style="border: 1px solid ; height: 30px;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Bill Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Seller Company</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
@@ -88,6 +93,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.bill_number}</td>
                 <td style="border: 1px solid ;">${rec.party_company.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.due_date}</td>
             </tr>
@@ -123,6 +129,7 @@
     Dear Sir,
 </p>
 <p>
+    We are mailing you on behalf of ${ctx['context']['company_data']['name']}.
     We would like to bring some payments to your notice:<br/>
     % if ctx['context']['overdue']|length
     <br/>
@@ -219,9 +226,10 @@
     % if ctx['context']['overdue']|length
     Invoices which got overdue this week are:<br/>
     <table style="border: 1px solid ;">
-        <thead style="border: 1px solid ;"><tr>
+        <thead style="border: 1px solid ; text-align: center"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue By</th>
             </tr>
@@ -232,6 +240,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.invoice_number}</td>
                 <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.overdue}</td>
             </tr>
@@ -246,6 +255,7 @@
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
@@ -255,6 +265,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.invoice_number}</td>
                 <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.due_date}</td>
             </tr>
@@ -286,10 +297,11 @@
 
     % if ctx['context']['overdue']|length
     Invoices which got overdue this week are:<br/>
-    <table style="border: 1px solid ;">
+    <table style="border: 1px solid ; text-align: center">
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Overdue By</th>
@@ -301,6 +313,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.invoice_number}</td>
                 <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.due_date}</td>
                 <td style="border: 1px solid ;">${rec.overdue}</td>
@@ -313,10 +326,11 @@
 
     % if ctx['context']['due_invoices_current']|length
     Invoices due this week are as follows: <br/>
-    <table style="border: 1px solid ;">
+    <table style="border: 1px solid ;text-align: center">
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
@@ -327,6 +341,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.invoice_number}</td>
                 <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.due_date}</td>
             </tr>
@@ -338,10 +353,11 @@
     <br/><br/>
     % if ctx['context']['due_invoices_next']|length
     Invoices due next week are as follows:<br/>
-    <table style="border: 1px solid ;">
+    <table style="border: 1px solid ;text-align: center">
         <thead style="border: 1px solid ;"><tr>
             <th style="border: 1px solid ; height: 30px; width: 140px">Invoice Number</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Customer</th>
+            <th style="border: 1px solid ; height: 30px; width: 140px">Company</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Amount</th>
             <th style="border: 1px solid ; height: 30px; width: 140px">Due Date</th>
             </tr>
@@ -352,6 +368,7 @@
             <tr>
                 <td style="border: 1px solid ;">${rec.invoice_number}</td>
                 <td style="border: 1px solid ;">${rec.customer.name}</td>
+                <td style="border: 1px solid ;">${rec.company.name}</td>
                 <td style="border: 1px solid ;">${rec.amount}</td>
                 <td style="border: 1px solid ;">${rec.due_date}</td>
             </tr>

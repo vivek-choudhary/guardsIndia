@@ -123,6 +123,7 @@ class GuardPayments(models.Model):
     next_week_due_records= []
 
     for record in records:
+      if record.payment_date or record.paid_flag: continue
       overdue_flag, overdue = self._get_overdue_value(record)
       due_resp = self._get_due_date(record)
       if overdue:
@@ -160,8 +161,8 @@ class GuardPayments(models.Model):
     if not data:
       return False
 
-    field_names = ['bill_number','bill_date', 'party_company', 'amount', 'due', 'overdue','overdue_flag']
-    field_display_names = ['Bill Number', 'Bill Date', 'Seller Company', 'Amount', 'Due', 'Overdue Days']
+    field_names = ['bill_number','bill_date', 'party_company', 'amount', 'due', 'overdue','paid_flag','payment_date','overdue_flag']
+    field_display_names = ['Bill Number', 'Bill Date', 'Seller Company', 'Amount', 'Due', 'Overdue Days', 'Paid', 'Payment Date']
 
     filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to']),
                                    ('paid_flag','=',False)]
@@ -332,12 +333,11 @@ class GuardInvoices(models.Model):
     if not data:
       return False
 
-    field_names = ['invoice_number', 'invoice_date', 'customer', 'amount', 'due', 'overdue','overdue_flag']
-    field_display_names = ['Invoice Number', 'Invoice Date', 'Customer', 'Amount', 'Due', 'Overdue Days']
-    filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to']),
-                                   ('paid_flag','=',False)]
+    field_names = ['invoice_number', 'invoice_date', 'customer', 'amount', 'due', 'overdue','paid_flag','payment_date' ,'overdue_flag']
+    field_display_names = ['Invoice Number', 'Invoice Date', 'Customer', 'Amount', 'Due', 'Overdue Days', 'Paid','Payment Date']
+    filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to'])]
     if data['company_id']:
-      filter_arr.append(('party_company','=',int(data['company_id'])))
+      filter_arr.append(('customer','=',int(data['company_id'])))
 
     guard_data = self.search_read(filter_arr, field_names)
 
