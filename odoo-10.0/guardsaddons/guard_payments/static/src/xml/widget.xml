@@ -46,6 +46,7 @@
       <thead>
         <tr>
           <th>Bill Number</th>
+          <th>Bill Date</th>
           <th>Seller Company</th>
           <th>Buyer Company</th>
           <th>Amount</th>
@@ -59,6 +60,7 @@
         <t t-foreach="data" t-as="pay">
           <tr t-if="paid_flag==false">
             <td><t t-esc="pay.bill_number"/></td>
+            <td><t t-esc="pay.bill_date"/></td>
             <td><t t-esc="pay.party_company[1]"/></td>
             <td><t t-esc="pay.company[1]"/></td>
             <td><t t-esc="pay.amount"/></td>
@@ -71,6 +73,7 @@
         <t t-foreach="data" t-as="pay">
           <tr t-if="paid_flag==true">
             <td><t t-esc="pay.bill_number"/></td>
+            <td><t t-esc="pay.bill_date"/></td>
             <td><t t-esc="pay.party_company[1]"/></td>
             <td><t t-esc="pay.company[1]"/></td>
             <td><t t-esc="pay.amount"/></td>
@@ -90,6 +93,7 @@
       <thead>
         <tr>
           <th>Invoice Number</th>
+          <th>Invoice Date</th>
           <th>Customer</th>
           <th>Company</th>
           <th>Amount</th>
@@ -102,6 +106,7 @@
       <t t-foreach="data" t-as="pay">
         <tr t-if="pay.paid_flag==false">
           <td><t t-esc="pay.invoice_number"/></td>
+          <td><t t-esc="pay.invoice_date"/></td>
           <td><t t-esc="pay.customer[1]"/></td>
           <td><t t-esc="pay.company[1]"/></td>
           <td><t t-esc="pay.amount"/></td>
@@ -114,6 +119,7 @@
       <t t-foreach="data" t-as="pay">
         <tr t-if="pay.paid_flag==true">
           <td><t t-esc="pay.invoice_number"/></td>
+          <td><t t-esc="pay.invoice_date"/></td>
           <td><t t-esc="pay.customer[1]"/></td>
           <td><t t-esc="pay.company[1]"/></td>
           <td><t t-esc="pay.amount"/></td>

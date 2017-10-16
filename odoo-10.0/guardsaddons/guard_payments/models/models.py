@@ -37,8 +37,10 @@ class GuardPaymentInvoiceInterface(models.Model):
       for field in field_names:
         if isinstance(data[field], tuple):
           worksheet.write(row, col, data[field][1])
+        elif isinstance(data[field], bool):
+          worksheet.write(row, col, 'Yes' if data[field] else 'No')
         else:
-          worksheet.write(row, col, data[field])
+          worksheet.write(row, col, data[field] if data[field] else '')
         col += 1
       row += 1
 
@@ -161,17 +163,17 @@ class GuardPayments(models.Model):
     if not data:
       return False
 
-    field_names = ['bill_number','bill_date', 'party_company', 'amount', 'due', 'overdue','paid_flag','payment_date','overdue_flag']
-    field_display_names = ['Bill Number', 'Bill Date', 'Seller Company', 'Amount', 'Due', 'Overdue Days', 'Paid', 'Payment Date']
+    field_names = ['bill_number','bill_date', 'party_company', 'amount', 'due_days', 'overdue','paid_flag','payment_date','overdue_flag', 'due']
+    field_display_data = ['bill_number','bill_date', 'party_company', 'amount', 'due_days', 'overdue','paid_flag','payment_date']
+    field_display_names = ['Bill Number', 'Bill Date', 'Seller Company', 'Amount', 'Payment Terms', 'Overdue Days', 'Paid', 'Payment Date']
 
-    filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to']),
-                                   ('paid_flag','=',False)]
+    filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to'])]
     if data['company_id']:
       filter_arr.append(('party_company','=',int(data['company_id'])))
 
     guard_data = self.search_read(filter_arr, field_names)
 
-    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names ,
+    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_display_data, field_display_names ,
                                                                 sorted(guard_data, key=lambda x: x['due']))
     return file_name
 
@@ -333,15 +335,16 @@ class GuardInvoices(models.Model):
     if not data:
       return False
 
-    field_names = ['invoice_number', 'invoice_date', 'customer', 'amount', 'due', 'overdue','paid_flag','payment_date' ,'overdue_flag']
-    field_display_names = ['Invoice Number', 'Invoice Date', 'Customer', 'Amount', 'Due', 'Overdue Days', 'Paid','Payment Date']
+    field_names = ['invoice_number', 'invoice_date', 'customer', 'amount', 'payment_due', 'overdue','paid_flag','payment_date' ,'overdue_flag', 'due']
+    field_display_data = ['invoice_number', 'invoice_date', 'customer', 'amount', 'payment_due', 'overdue','paid_flag','payment_date' ]
+    field_display_names = ['Invoice Number', 'Invoice Date', 'Customer', 'Amount', 'Payment Terms', 'Overdue Days', 'Paid','Payment Date']
     filter_arr = ['|', ('due_date','<=',fields.Date.today()),('due_date', '>', data['from']), ('due_date', '<=', data['to'])]
     if data['company_id']:
       filter_arr.append(('customer','=',int(data['company_id'])))
 
     guard_data = self.search_read(filter_arr, field_names)
 
-    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_names, field_display_names,
+    file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_display_data, field_display_names,
                                                                 sorted(guard_data, key=lambda x: x['due']))
     return file_name
 
