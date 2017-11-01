@@ -26,7 +26,7 @@ class GuardPaymentInvoiceInterface(models.Model):
 
     workbook = xlsxwriter.Workbook(file_name)
     bold = workbook.add_format({'bold': True})
-    date_format = workbook.add_format({'num_format': 'dd/mm/yyyy'})
+    date_format = workbook.add_format({'num_format': 'dd/mm/yy'})
     worksheet = workbook.add_worksheet()
 
     # Creating Heading Columns
