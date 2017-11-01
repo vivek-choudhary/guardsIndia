@@ -34,7 +34,8 @@ openerp.guard_payments = function(instance, local) {
             this._super.apply(this, arguments);
             this.$el.find('.datetimepicker').datetimepicker(this.options);
             this.load_company().then(function(data){
-                self.$('.company-drop-down').after(QWeb.render('CompanyDropDown', {'data': data}))
+                self.$('.company-drop-down').after(QWeb.render('CompanyDropDown', {'data': data}));
+                self.$('#company').select2();
             });
         },
         load_company: function(){

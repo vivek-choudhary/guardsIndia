@@ -21,11 +21,12 @@ class GuardPaymentInvoiceInterface(models.Model):
     for record in self:
       record.due = (datetime.strptime(record.due_date, '%Y-%m-%d') - datetime.today()).days
 
-  def create_excel_report(self, file_name, field_names, field_display_names, report_data):
+  def create_excel_report(self, file_name, field_names, field_display_names, report_data, model=None):
     import xlsxwriter
 
     workbook = xlsxwriter.Workbook(file_name)
     bold = workbook.add_format({'bold': True})
+    date_format = workbook.add_format({'num_format': 'dd/mm/yyyy'})
     worksheet = workbook.add_worksheet()
 
     # Creating Heading Columns
@@ -39,8 +40,11 @@ class GuardPaymentInvoiceInterface(models.Model):
           worksheet.write(row, col, data[field][1])
         elif isinstance(data[field], bool):
           worksheet.write(row, col, 'Yes' if data[field] else 'No')
+        elif self.env['ir.model.fields'].search([('name','=',field),('model','=',model)]).ttype == 'date':
+          date_value = datetime.strptime(data[field],'%Y-%m-%d').date()
+          worksheet.write(row, col,date_value if date_value else '', date_format)
         else:
-          worksheet.write(row, col, data[field] if data[field] else '')
+          worksheet.write(row, col, data[field] if data[field] else ' ')
         col += 1
       row += 1
 
@@ -81,6 +85,8 @@ class GuardPayments(models.Model):
     today = datetime.today()
     overdue = None
     due_date = datetime.strptime(record.due_date, '%Y-%m-%d')
+    if record.paid_flag:
+      today = datetime.strptime(record.payment_date, '%Y-%m-%d')
     if due_date < today or record.overdue > 0 :
       overdue = today - due_date
       flag = True
@@ -174,7 +180,7 @@ class GuardPayments(models.Model):
     guard_data = self.search_read(filter_arr, field_names)
 
     file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_display_data, field_display_names ,
-                                                                sorted(guard_data, key=lambda x: x['due']))
+                                                                sorted(guard_data, key=lambda x: x['due']), model='guard.payments')
     return file_name
 
 
@@ -241,6 +247,8 @@ class GuardInvoices(models.Model):
     today = datetime.today()
     overdue = None
     due_date = datetime.strptime(record.due_date, '%Y-%m-%d')
+    if record.paid_flag:
+      today = datetime.strptime(record.payment_date, '%Y-%m-%d')
     if due_date < today:
       flag=True
       overdue = today - due_date
@@ -345,7 +353,7 @@ class GuardInvoices(models.Model):
     guard_data = self.search_read(filter_arr, field_names)
 
     file_name = self.env['guard.interface'].create_excel_report('/tmp/report.xlsx', field_display_data, field_display_names,
-                                                                sorted(guard_data, key=lambda x: x['due']))
+                                                                sorted(guard_data, key=lambda x: x['due']), model='guard.invoices')
     return file_name
 
   def get_mail_list(self):

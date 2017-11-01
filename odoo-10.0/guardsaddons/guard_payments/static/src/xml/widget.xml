@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
   <t t-name="ReportTemplate">
-    <div class="col-sm-12">
+    <div class="col-sm-12" style="padding: 0 5px;">
       <div class="form-inline">
         <div class="form-group">
           <label for="from-date">From</label>
@@ -60,7 +60,7 @@
         <t t-foreach="data" t-as="pay">
           <tr t-if="paid_flag==false">
             <td><t t-esc="pay.bill_number"/></td>
-            <td><t t-esc="pay.bill_date"/></td>
+            <td><t t-esc="moment(pay.bill_date).format('DD-MM-YYYY')"/></td>
             <td><t t-esc="pay.party_company[1]"/></td>
             <td><t t-esc="pay.company[1]"/></td>
             <td><t t-esc="pay.amount"/></td>
@@ -73,14 +73,14 @@
         <t t-foreach="data" t-as="pay">
           <tr t-if="paid_flag==true">
             <td><t t-esc="pay.bill_number"/></td>
-            <td><t t-esc="pay.bill_date"/></td>
+            <td><t t-esc="moment(pay.bill_date).format('DD-MM-YYYY')"/></td>
             <td><t t-esc="pay.party_company[1]"/></td>
             <td><t t-esc="pay.company[1]"/></td>
             <td><t t-esc="pay.amount"/></td>
             <td><t t-esc="pay.due_days"/></td>
             <td><t t-esc="pay.overdue"/></td>
             <td>Paid</td>
-            <td><t t-esc="payment_date"/></td>
+            <td><t t-esc="moment(payment_date).format('DD-MM-YYYY')"/></td>
           </tr>
         </t>
 
@@ -106,7 +106,7 @@
       <t t-foreach="data" t-as="pay">
         <tr t-if="pay.paid_flag==false">
           <td><t t-esc="pay.invoice_number"/></td>
-          <td><t t-esc="pay.invoice_date"/></td>
+          <td><t t-esc="moment(pay.invoice_date).format('DD-MM-YYYY')"/></td>
           <td><t t-esc="pay.customer[1]"/></td>
           <td><t t-esc="pay.company[1]"/></td>
           <td><t t-esc="pay.amount"/></td>
@@ -119,21 +119,21 @@
       <t t-foreach="data" t-as="pay">
         <tr t-if="pay.paid_flag==true">
           <td><t t-esc="pay.invoice_number"/></td>
-          <td><t t-esc="pay.invoice_date"/></td>
+          <td><t t-esc="moment(pay.invoice_date).format('DD-MM-YYYY')"/></td>
           <td><t t-esc="pay.customer[1]"/></td>
           <td><t t-esc="pay.company[1]"/></td>
           <td><t t-esc="pay.amount"/></td>
           <td><t t-esc="pay.payment_due"/></td>
           <td><t t-esc="pay.overdue"/></td>
           <td>Paid</td>
-          <td><t t-esc="pay.payment_date"/></td>
+          <td><t t-esc="moment(pay.payment_dat).format('DD-MM-YYYY')"/></td>
         </tr>
       </t>
     </table>
   </t>
 
   <t t-name="CompanyDropDown">
-    <select class="form-control" name="type" id="company">
+    <select class="form-control" name="type" id="company" style="width: 200px">
       <option value="all">All</option>
       <t t-foreach="data" t-as='company'>
         <option t-attf-value="{{company.id}}"><t t-esc="company.name"/></option>
