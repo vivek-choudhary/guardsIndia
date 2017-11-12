@@ -72,6 +72,11 @@ class GuardPayments(models.Model):
   party_company = fields.Many2one('res.partner', domain="[('is_company','=',True)]", string='Seller Company')
   overdue_flag = fields.Boolean(string='Overdue Flag', compute="_compute_overdue_date", store=False)
 
+  @api.one
+  def un_register_payment(self):
+    self.payment_date = None
+    self.paid_flag = False
+
   def _compute_overdue_date(self):
     for record in self:
       flag, overdue = self._get_overdue_value(record)
@@ -207,6 +212,11 @@ class GuardInvoices(models.Model):
   def register_payment(self):
     self.paid_flag = True
     self.payment_date = fields.Date.today()
+
+  @api.one
+  def un_register_payment(self):
+    self.payment_date = None
+    self.paid_flag = False
 
   @api.onchange('payment_due','due_date')
   def _onchange_payment_date(self):

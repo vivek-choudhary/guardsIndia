@@ -57,6 +57,9 @@
             <button string="Register Payment" type="object"
                     attrs="{'invisible':[('payment_date','!=',False)]}"
                     name="register_payment" />
+            <button string="Set Unpaid" type="object"
+                    attrs="{'invisible':[('payment_date','=',False)]}"
+                    name="un_register_payment" groups="base.group_system"/>
           </header>
           <sheet>
             <group colspan="4">
@@ -102,6 +105,9 @@
             <button string="Register Payment" type="object"
                     attrs="{'invisible':[('payment_date','!=',False)]}"
                     name="register_payment"/>
+            <button string="Set Unpaid" type="object"
+                    attrs="{'invisible':[('payment_date','=',False)]}"
+                    name="un_register_payment" groups="base.group_system"/>
           </header>
           <sheet>
             <group colspan="4">
