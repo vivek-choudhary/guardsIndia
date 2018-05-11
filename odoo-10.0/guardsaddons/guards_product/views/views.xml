@@ -1,0 +1,62 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="guards_product.product_list">
+      <field name="name">Products List</field>
+      <field name="model">guards.product</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name" required="1"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="guards_product.product_form">
+      <field name="name">Products Form</field>
+      <field name="model">guards.product</field>
+      <field name="arch" type="xml">
+        <form string="Products form">
+          <header>
+            <field name="active" invisible="1"/>
+          </header>
+          <sheet>
+            <group colspan="4">
+              <group col="2">
+                <field name="name" required='1'/>
+                <field name="internal_reference"/>
+                <field name="description"/>
+              </group>
+              <group col="2">
+                <field name="cost_price" widget="monetary"/>
+                <field name="sale_price" widget="monetary"/>
+              </group>
+            </group>
+          </sheet>
+
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="guards_product.action_window_product">
+      <field name="name">Products</field>
+      <field name="res_model">guards.product</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Inventory" id="guards_product.menu_root_inventory"/>
+    <menuitem name="Products"
+              id="guards_product.menu_products"
+              sequence="1"
+              parent="guards_product.menu_root_inventory"/>
+
+    <!-- actions -->
+    <menuitem name="Product" id="guards_product.menu_product_list" parent="guards_product.menu_products"
+              action="guards_product.action_window_product"/>
+    <!--
+    <menuitem name="Server to list" id="guards_product" parent="guards_product.menu_2"
+              action="guards_product.action_server"/>
+    -->
+  </data>
+</odoo>

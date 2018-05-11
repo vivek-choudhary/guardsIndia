@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record model="ir.ui.view" id="product_update_inventory_view">
+        <field name="name">Update Product Inventory</field>
+        <field name="model">guards.product.inventory.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+              <group>
+                <field name="product_id"
+                       options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"
+                       required="1"/>
+                <field name="quantity"
+                       required="1"/>
+                <field name="product_uom"
+                       options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"
+                       required="1"/>
+              </group>
+              <footer>
+                  <button string="Cancel" special="cancel" class="oe_highlight"/>
+                  <button name="update_inventory" string="Update" type="object" class="oe_highlight" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

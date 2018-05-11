@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="guards_stock.inherit_guards_product">
+          <field name="name">Product Form Inherit</field>
+          <field name="model">guards.product</field>
+          <field name="inherit_id" ref="guards_product.product_form"></field>
+          <field name="arch" type="xml">
+            <field name='active' position="after">
+              <button name="open_inventory_wizard"
+                      string="Update Inventory"
+                      type="object"
+                      class="oe_highlight" />
+            </field>
+          </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="guards_stock.uom_list">
+      <field name="name">Units List</field>
+      <field name="model">guards.stock.uom</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="abbrevation"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="guards_stock.stock_list">
+      <field name="name">Inventory List</field>
+      <field name="model">guards.stock</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="product_id"/>
+          <field name="product_uom"/>
+          <field name="product_qty"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="guards_stock.inherit_guards_product_list">
+      <field name="name">Product List Inherit</field>
+      <field name="model">guards.product</field>
+      <field name="inherit_id" ref="guards_product.product_list"></field>
+      <field name="arch" type="xml">
+        <field name="name" position="after">
+          <field name="net_quantity"/>
+        </field>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="guards_stock.inherit_guards_product_form">
+      <field name="name">Product Form Inherit</field>
+      <field name="model">guards.product</field>
+      <field name="inherit_id" ref="guards_product.product_form"></field>
+      <field name="arch" type="xml">
+        <field name="name" position="after">
+          <field name="net_quantity"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="guards_stock.action_window_uom">
+      <field name="name">Units</field>
+      <field name="res_model">guards.stock.uom</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="guards_stock.action_window_inventory">
+      <field name="name">Inventory</field>
+      <field name="res_model">guards.stock</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="guards_stock.action_server">
+      <field name="name">guards_stock server</field>
+      <field name="model_id" ref="model_guards_stock_guards_stock"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+
+    <menuitem name="Configuration"
+              id="guards_stock.menu_configuration"
+              sequence="2"
+              parent="guards_product.menu_root_inventory"/>
+
+
+    <!-- actions -->
+    <menuitem name="Units" id="guards_stock.menu_uom" parent="guards_stock.menu_configuration"
+              action="guards_stock.action_window_uom"/>
+
+    <!--<menuitem name="Inventory" id="guards_stock.menu_inventory" parent="guards_product.menu_products"-->
+              <!--action="guards_stock.action_window_inventory"/>-->
+  </data>
+</odoo>

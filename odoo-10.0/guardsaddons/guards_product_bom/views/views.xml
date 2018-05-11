@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="guards_bom_list">
+      <field name="name">BOM List</field>
+      <field name="model">guards.bom</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="product_id"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="guards_bom_form">
+      <field name="name">BOM Form</field>
+      <field name="model">guards.bom</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+          </header>
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="product_id"
+                     options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+            </group>
+            <notebook>
+              <page string="BOM Products">
+                <field name="bom_product_ids">
+                  <tree editable="bottom">
+                    <field name="product_id"
+                            options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+                    <field name="quantity"/>
+                    <field name="product_uom_id" required="True"
+                            options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="bom_action_window">
+      <field name="name">Product BOM</field>
+      <field name="res_model">guards.bom</field>
+      <field name="view_mode">tree,form</field>
+      <field name="context">{'default_active':True}</field>
+    </record>
+
+
+    <!-- actions -->
+    <menuitem name="BOM" id="bom_menu" parent="guards_stock.menu_configuration"
+              action="bom_action_window"/>
+  </data>
+</odoo>
