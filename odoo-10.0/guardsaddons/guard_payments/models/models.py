@@ -265,7 +265,7 @@ class GuardInvoices(models.Model):
 
     return flag,overdue
 
-  def _update_date(self):
+  def _update_date(self, customer=False):
     records = self.search([])
     overdue_invoices = []
     due_invoices_current = []
@@ -300,7 +300,8 @@ class GuardInvoices(models.Model):
                                                     'overdue': [], 'due': []}
 
       if overdue:
-        record.write({'overdue': '%s Day(s)' % overdue.days, 'overdue_reminders': record.overdue_reminders + 1})
+        if customer:
+          record.write({'overdue': '%s Day(s)' % overdue.days, 'overdue_reminders': record.overdue_reminders + 1})
         if 'Infratech' in record.company.name:
           customer_data_infratech[record.customer.id]['overdue'].append(record)
         elif 'Navnidhi' in record.company.name:
@@ -310,24 +311,38 @@ class GuardInvoices(models.Model):
 
       if due_resp and due_resp.days < 14 and due_resp.days > 0:
         if due_resp.days < 7:
-          if 'Infratech' in record.company.name:
-            customer_data_infratech[record.customer.id]['due'].append(record)
-          if 'Navnidhi' in record.company.name:
-            customer_data_navnidhi[record.customer.id]['due'].append(record)
-          sale_person_data[record.sales_person.id]['due'].append(record)
           due_invoices_current.append(record)
         else:
           due_invoices_next.append(record)
         sale_person_data[record.sales_person.id]['due'].append(record)
 
-    self._send_mail_to_record(customer_data_infratech, 'guard_payments.customer_mail', company_data=company_infratech)
-    self._send_mail_to_record(customer_data_navnidhi, 'guard_payments.customer_mail', company_data=company_navnidhi)
-    self._send_mail_to_record(sale_person_data, 'guard_payments.sale_person_mail')
-    context = {'due_invoices_current': due_invoices_current,
-               'due_invoices_next': due_invoices_next,
-               'overdue': overdue_invoices}
-    if len(due_invoices_current) or len(due_invoices_next) or len(overdue_invoices):
+
+    return {
+      'customer_data_infratech': customer_data_infratech,
+      'customer_data_navnidhi': customer_data_navnidhi,
+      'company_infratech': company_infratech,
+      'company_navnidhi': company_navnidhi,
+      'sale_person_data': sale_person_data,
+      'due_invoices_current': due_invoices_current,
+      'due_invoices_next': due_invoices_next,
+      'overdue_invoices': overdue_invoices
+    }
+
+  def _send_mail_company(self):
+    data = self._update_date(customer=False)
+    self._send_mail_to_record(data['sale_person_data'], 'guard_payments.sale_person_mail')
+    context = {'due_invoices_current': data['due_invoices_current'],
+               'due_invoices_next': data['due_invoices_next'],
+               'overdue': data['overdue_invoices']}
+    if len(data['due_invoices_current']) or len(data['due_invoices_next']) or len(data['overdue_invoices']):
       self.send_mail('guard_payments.admin_mail_invoices', self.get_mail_list(), context)
+    return
+
+  def _send_mail_customer(self):
+    data = self._update_date(customer=True)
+    self._send_mail_to_record(data['customer_data_infratech'], 'guard_payments.customer_mail', company_data=data['company_infratech'])
+    self._send_mail_to_record(data['customer_data_navnidhi'], 'guard_payments.customer_mail', company_data=data['company_navnidhi'])
+    return
 
 
   def _send_mail_to_record(self, record_list=[], mail_template=None, company_data = None):
