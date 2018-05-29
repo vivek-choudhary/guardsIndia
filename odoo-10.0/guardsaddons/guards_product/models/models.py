@@ -9,7 +9,7 @@ class guardsProducts(models.Model):
 
   name = fields.Char(string='Product Name', store=True, reqired=True)
   description = fields.Text(string='Product Description')
-  internal_reference = fields.Char(string='Internal Reference', required=True)
+  internal_reference = fields.Char(string='Internal Reference')
   sale_price = fields.Float(string='Sale Price')
   cost_price = fields.Float(string='Cost Price')
   active = fields.Boolean(string='Active', default=True)

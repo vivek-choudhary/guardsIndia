@@ -14,15 +14,19 @@ class GuardsBomProducts(models.Model):
 
 
 class GuardsBom(models.Model):
-    _name = 'guards.bom'
-    _description = 'Guards Product BOM'
+  _name = 'guards.bom'
+  _description = 'Guards Product BOM'
 
-    name = fields.Char(string='BOM Name', required=True)
-    bom_product_ids = fields.One2many(comodel_name='guards.product.bom',inverse_name='bom_id',string='Product BOM')
-    product_id = fields.Many2one(comodel_name='guards.product', string='Product', required=True)
-    notes = fields.Text(string='Extra Notes')
-    active = fields.Boolean(string='Active', default=True)
+  name = fields.Char(string='BOM Name')
+  bom_product_ids = fields.One2many(comodel_name='guards.product.bom',inverse_name='bom_id',string='Product BOM')
+  product_id = fields.Many2one(comodel_name='guards.product', string='Product', required=True)
+  notes = fields.Text(string='Extra Notes')
+  active = fields.Boolean(string='Active', default=True)
 
+  def get_product_quantites_dict(self, product_id, quantity):
+    product_obj = self.search(product_id)
+    product_dir = product_obj.bom_product_ids.map(lambda x: {x: x.quantity * quantity})
+    return product_dir
 
 class GuardsProductInherit(models.Model):
   _name = 'guards.product'

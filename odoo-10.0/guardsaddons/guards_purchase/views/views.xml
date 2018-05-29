@@ -39,7 +39,7 @@
             <notebook>
               <page string="Purchase Lines">
                 <field name="purchase_lines" attrs="{'readonly':[('status','=','confirm')]}">
-                  <tree>
+                  <tree editable="bottom">
                     <field name="product_id"/>
                     <field name="quantity"/>
                     <field name="product_uom"/>

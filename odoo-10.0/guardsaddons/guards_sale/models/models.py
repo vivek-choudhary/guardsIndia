@@ -35,6 +35,7 @@ class GuardsSaleProduct(models.Model):
 class GuardsSale(models.Model):
     _name = 'guards.sale'
     _description = 'Guards Sale Module'
+    _rec_name = 'invoice_number'
 
     customer_partner_id = fields.Many2one(comodel_name='res.partner', string='Customer', required=True)
     sale_product_ids = fields.One2many(comodel_name='guards.sale.product', inverse_name='sale_id',string='Products')
@@ -42,7 +43,8 @@ class GuardsSale(models.Model):
     seller_company = fields.Many2one(comodel_name='res.partner', string='Seller Company', required=True)
     amount = fields.Float(compute='_get_total_amount', string='Amount', store=True)
     status = fields.Selection(selection=[('draft','Draft'),('confirm','Confirm')])
-    invoice_number = fields.Char(string='Invoice Number', required=True)
+    invoice_number = fields.Char(string='Invoice Number')
+    inventory_check_status = fields.Boolean(string='Inventory Status', compute='_update_inventory_status')
     # taxes = fields.One2many(comodel_name='guards.tax')
 
     @api.depends('sale_product_ids')
@@ -52,6 +54,24 @@ class GuardsSale(models.Model):
         total_cost = sum(map(lambda x: x.user_sale_price, record.sale_product_ids),0)
       record.amount = total_cost
 
+    @api.depends('sale_product_ids')
+    def _update_inventory_status(self):
+      # To be used with single length self object
+      status = False
+      guards_stock_env = self.env['guards.stock']
+      guards_bom_env = self.env['guards.bom']
+
+      for sale_product_id in self.sale_product_ids:
+        if sale_product_id.product_bom_id:
+          product_quantities = guards_bom_env.get_product_quantites_dict(sale_product_id.product_id, self.quantity)
+        else:
+          status = guards_stock_env
+
+
+
+      self.inventory_check_status = status
+
+    # To be used with single self object
     def confirm_sale(self):
       for sale_product_id in self.sale_product_ids:
         if not sale_product_id.product_bom_id and not sale_product_id.product_uom_id:
@@ -61,6 +81,7 @@ class GuardsSale(models.Model):
         else:
           for product in sale_product_id.product_bom_id.bom_product_ids:
             self.create_stock_move(product.product_id, product.product_uom_id , sale_product_id.quantity * product.quantity)
+        self.status = 'confirm'
       return True
 
     def create_stock_move(self, product, product_uom, quantity):

@@ -22,25 +22,36 @@
       <field name="arch" type="xml">
         <form>
           <header>
-            <button name="confirm_sale" type="object" string="Confirm" class="btn btn-primary"/>
+            <button name="confirm_sale"
+                    attrs="{'invisible':[('status','=','confirm')]}"
+                    type="object" string="Confirm" class="btn btn-primary" />
             <field name="status" widget="statusbar"/>
           </header>
           <sheet>
             <group colspan="4">
               <group col="2">
-                <field name="invoice_number" string="Invoice Number"/>
-                <field name="seller_company" string="Seller" domain="[('is_company','=',True)]"
+                <field name="invoice_number"
+                       string="Invoice Number"
+                        attrs="{'readonly':[('status','=','confirm')]}"/>
+                <field name="seller_company" string="Seller"
+                       domain="[('is_company','=',True)]"
+                       attrs="{'readonly':[('status','=','confirm')]}"
                        options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}" />
-                <field name="customer_partner_id" string="Customer"/>
+                <field name="customer_partner_id"
+                       attrs="{'readonly':[('status','=','confirm')]}"
+                       string="Customer"/>
               </group>
               <group col="2">
-                <field name="sale_date" string="Date"/>
-                <field name="amount" string="Amount"/>
+                <field name="sale_date"
+                       attrs="{'readonly':[('status','=','confirm')]}"
+                       string="Date"/>
+                <field name="amount" attrs="{'readonly':[('status','=','confirm')]}"
+                       string="Amount"/>
               </group>
             </group>
             <notebook>
               <page string="Products">
-                <field name="sale_product_ids">
+                <field name="sale_product_ids" attrs="{'readonly':[('status','=','confirm')]}">
                   <tree editable="bottom">
                     <field name="product_id" required="True"
                             options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>

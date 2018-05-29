@@ -28,15 +28,28 @@ class guardsStock(models.Model):
   product_qty = fields.Integer(string='Product Quantity', compute='_get_moves_quantity')
   product_uom = fields.Many2one(comodel_name='guards.stock.uom', string='Unit')
   move_ids = fields.One2many(comodel_name='guards.stock.move', inverse_name='stock_id')
+  product_qty_state = fields.Selection(selection=[('ok', 'OK'), ('danger', 'Danger'), ('negative', 'Negative')])
 
   @api.depends('move_ids')
   def _get_moves_quantity(self):
     for ele in self:
-      type_in = ele.move_ids.filtered(lambda r: r.type== "in").mapped('quantity')
-      type_out = ele.move_ids.filtered(lambda r: r.type== "out").mapped('quantity')
-      if not len(type_in):
-        return 0
+      type_in = ele.move_ids.filtered(lambda r: r.type == "in").mapped('quantity')
+      type_out = ele.move_ids.filtered(lambda r: r.type == "out").mapped('quantity')
       ele.product_qty = reduce((lambda x,y: x + y), type_in, 0) - reduce((lambda x,y: x + y), type_out, 0)
+      self._update_quantity_state(ele)
+
+  def _update_quantity_state(self, element):
+    if element.product_qty < 0:
+      element.product_qty_state = 'negative'
+    elif element.product_qty < 50:
+      element.product_qty_state = 'danger'
+    return
+
+  # Returns boolean on checking the given quantity product with the product quantity in the inventory
+  def check_product_inventory(self, product, given_quantity):
+    if product.product_qty > given_quantity:
+      return False
+    return True
   
   @api.model
   def create(self, values):

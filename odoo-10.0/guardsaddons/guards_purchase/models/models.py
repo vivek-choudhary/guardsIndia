@@ -36,8 +36,8 @@ class guardsPurchase(models.Model):
   _description = 'Guards Purchase'
   _rec_name = 'invoice_number'
 
-  partner_id = fields.Many2one('res.partner', string='Partner', required=True)
-  invoice_number = fields.Char(string='Invoice', required=True)
+  partner_id = fields.Many2one('res.partner', string='Seller', required=True)
+  invoice_number = fields.Char(string='Invoice')
   purchase_lines = fields.One2many(comodel_name='guards.purchase.line', inverse_name='purchase_id')
   status = fields.Selection(selection=[('draft', 'Draft'), ('confirm','Confirm')])
   total_cost = fields.Integer(compute='_get_total_cost')

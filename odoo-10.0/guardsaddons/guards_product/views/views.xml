@@ -24,7 +24,6 @@
             <group colspan="4">
               <group col="2">
                 <field name="name" required='1'/>
-                <field name="internal_reference"/>
                 <field name="description"/>
               </group>
               <group col="2">
