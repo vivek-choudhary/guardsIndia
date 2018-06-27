@@ -16,7 +16,7 @@ class guardsProducts(models.Model):
 
   _sql_constraints = [
     ('guards_product_uniqueness',
-     'UNIQUE (name, internal_reference)',
+     'UNIQUE (name)',
      'Name of the product must be unique'
      )
   ]

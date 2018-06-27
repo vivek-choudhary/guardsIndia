@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+  <t t-name="BomWidgetTemplate">
+    <div class="col-sm-12" style="padding: 0 5px;">
+      <div class="form-inline">
+        <div class="form-group">
+          <label for="Product" class="product-drop-down">Product</label>
+        </div>
+        <div class="form-group">
+          <label for="BOM" class="product-bom-drop-down">BOM</label>
+        </div>
+        <div class="form-group">
+          <label for="type">Quantity</label>
+          <input type="number" name="bom-quantity" class="quantity form-control" min="0" steps="1"></input>
+        </div>
+        <button class="btn btn-primary bom" name="get-report">Get BOM</button>
+        <button class="btn btn-primary download-bom-report">Download BOM Report</button>
+      </div>
+
+      <div class="render-section" style="max-height: 500px; overflow-y: scroll; margin-top: 50px;"></div>
+    </div>
+  </t>
+
+  <t t-name="productInventoryList">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Inventory</th>
+          <th>Required Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <t t-foreach="data" t-as="product">
+          <tr>
+            <td><t t-esc="product.name"/></td>
+            <td><t t-esc="product.product_quantity"/></td>
+            <td><t t-esc="product.required_quantity"/></td>
+          </tr>
+        </t>
+      </tbody>
+    </table>
+  </t>
+
+
+  <t t-name="ProductDropDown">
+    <select class="form-control" name="type" id="id-product-drop-down" style="width: 200px">
+      <t t-foreach="data" t-as='product'>
+        <option t-attf-value="{{product.id}}"><t t-esc="product.name"/></option>
+      </t>
+    </select>
+  </t>
+
+  <t t-name="ProductBomDropDown">
+    <select class="form-control" name="type" id="id-product-bom-drop-down" style="width: 200px">
+      <t t-foreach="data" t-as='bom'>
+        <option t-attf-value="{{bom.id}}"><t t-esc="bom.name"/></option>
+      </t>
+    </select>
+  </t>
+
+</templates>

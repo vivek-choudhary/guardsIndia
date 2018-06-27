@@ -57,19 +57,17 @@ class GuardsSale(models.Model):
     @api.depends('sale_product_ids')
     def _update_inventory_status(self):
       # To be used with single length self object
-      status = False
+      status_flags = []
       guards_stock_env = self.env['guards.stock']
       guards_bom_env = self.env['guards.bom']
 
       for sale_product_id in self.sale_product_ids:
         if sale_product_id.product_bom_id:
-          product_quantities = guards_bom_env.get_product_quantites_dict(sale_product_id.product_id, self.quantity)
+          product_quantities = guards_bom_env.get_product_quantites_dict(sale_product_id.product_bom_id, sale_product_id.quantity)
+          status_flags.extend(map(lambda x: guards_stock_env.check_product_inventory(x[0], x[1]), product_quantities))
         else:
-          status = guards_stock_env
-
-
-
-      self.inventory_check_status = status
+          status_flags.extend([guards_stock_env.check_product_inventory(sale_product_id.product_id, sale_product_id.quantity)])
+      self.inventory_check_status = all(status_flags)
 
     # To be used with single self object
     def confirm_sale(self):

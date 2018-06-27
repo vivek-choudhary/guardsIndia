@@ -87,6 +87,7 @@
                 <field name="overdue" attrs="{'invisible':[('overdue_flag','=',False)]}"/>
               </group>
               <group col="2">
+                <field name="actual_amount"/>
                 <field name="comment"/>
               </group>
             </group>

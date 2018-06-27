@@ -43,6 +43,7 @@ class guardsPurchase(models.Model):
   total_cost = fields.Integer(compute='_get_total_cost')
   casting_weight = fields.Integer(string='Weight')
   purchase_date = fields.Date(string='Purchase Date', required=True)
+  remark = fields.Text(string='Remark')
 
 
   def _get_total_cost(self):

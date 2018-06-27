@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_guards_bom_widget_guards_bom_widget,guards_bom_widget.guards_bom_widget,model_guards_bom_widget_guards_bom_widget,,1,0,0,0

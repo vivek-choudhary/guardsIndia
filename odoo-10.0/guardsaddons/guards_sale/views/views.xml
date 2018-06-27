@@ -22,8 +22,9 @@
       <field name="arch" type="xml">
         <form>
           <header>
+            <field name="inventory_check_status" invisible="1"/>
             <button name="confirm_sale"
-                    attrs="{'invisible':[('status','=','confirm')]}"
+                    attrs="{'invisible':['|',('status','=','confirm'),('inventory_check_status','=',False)]}"
                     type="object" string="Confirm" class="btn btn-primary" />
             <field name="status" widget="statusbar"/>
           </header>
@@ -33,7 +34,7 @@
                 <field name="invoice_number"
                        string="Invoice Number"
                         attrs="{'readonly':[('status','=','confirm')]}"/>
-                <field name="seller_company" string="Seller"
+                <field name="seller_company" string="Supplier"
                        domain="[('is_company','=',True)]"
                        attrs="{'readonly':[('status','=','confirm')]}"
                        options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}" />
@@ -49,6 +50,9 @@
                        string="Amount"/>
               </group>
             </group>
+            <div attrs="{'invisible': [('status','=','confirm')]}">
+              <h4 attrs="{'invisible': [('inventory_check_status','=',True)]}" style="color:red">Not Enough Products in Warehouse</h4>
+            </div>
             <notebook>
               <page string="Products">
                 <field name="sale_product_ids" attrs="{'readonly':[('status','=','confirm')]}">
@@ -63,8 +67,6 @@
                             options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
                     <field name="unit_sale_price" required="True" domain="[('product_id','=',product_id)]"
                             options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
-                    <field name="bom_sale_price"/>
-                    <field name="user_sale_price"/>
 
                   </tree>
                 </field>
@@ -85,21 +87,6 @@
       <field name="context">{'default_status': 'draft'}</field>
     </record>
 
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="guards_sale.action_server">
-      <field name="name">guards_sale server</field>
-      <field name="model_id" ref="model_guards_sale_guards_sale"/>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field>
-    </record>
-    -->
-
     <!-- Top menu item -->
     <menuitem name="Sale" id="root_menu_sale"/>
     <!-- menu categories -->
@@ -113,9 +100,5 @@
     <menuitem name="Sales" id="list_menu_sales" parent="composition_menu_sale"
               action="sale_action_window"/>
 
-    <!--
-    <menuitem name="Server to list" id="guards_sale" parent="guards_sale.menu_2"
-              action="guards_sale.action_server"/>
-    -->
   </data>
 </odoo>

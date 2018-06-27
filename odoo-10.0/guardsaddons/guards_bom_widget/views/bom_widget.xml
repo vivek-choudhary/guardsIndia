@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+
+        <menuitem id="bom_widget_root_menu"
+                  name="BOM Calculation"
+                  parent="guards_sale.root_menu_sale" sequence="20"/>
+
+        <record id="bom_widget_client_action" model="ir.actions.client">
+            <field name="name">BOM Calculation</field>
+            <field name="tag">sale.bom_calculation</field>
+        </record>
+
+        <menuitem id="bom_widget_menuitem" name="Report" parent="bom_widget_root_menu"
+                  action="bom_widget_client_action"/>
+
+        <template id="assets_backend" name="payments_import assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/guards_bom_widget/static/src/js/bom_widget.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

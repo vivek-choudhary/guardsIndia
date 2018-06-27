@@ -19,8 +19,7 @@ class productInventoryWizard(models.TransientModel):
     return self.env['guards.stock'].create(stock_values)
 
   def create_move(self, values):
-    stock = self.env['guards.stock'].search([('product_id','=',values['product_id']),
-                                             ('product_uom','=', values['product_uom'])])
+    stock = self.env['guards.stock'].search([('product_id','=',values['product_id'])])
     if not len(stock):
       stock = self.create_stock(values)
 
@@ -35,8 +34,7 @@ class productInventoryWizard(models.TransientModel):
     return res
 
   def create_out_move(self, values):
-    stock = self.env['guards.stock'].search([('product_id','=',values['product_id']),
-                                             ('product_uom','=', values['product_uom'])])
+    stock = self.env['guards.stock'].search([('product_id','=',values['product_id'])])
     if not len(stock):
       stock = self.create_stock(values)
 

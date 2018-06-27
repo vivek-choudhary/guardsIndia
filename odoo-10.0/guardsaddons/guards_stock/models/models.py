@@ -47,7 +47,9 @@ class guardsStock(models.Model):
 
   # Returns boolean on checking the given quantity product with the product quantity in the inventory
   def check_product_inventory(self, product, given_quantity):
-    if product.product_qty > given_quantity:
+    if not len(product.stock_ids):
+      return False
+    if product.stock_ids.product_qty < given_quantity:
       return False
     return True
   
@@ -58,7 +60,6 @@ class guardsStock(models.Model):
   @api.model
   def write(self, values):
     return super(guardsStock, self).write(values)
-
 
 
 class guardsProductIntheritStock(models.Model):
@@ -74,7 +75,7 @@ class guardsProductIntheritStock(models.Model):
     for ele in self:
       mapped_ids = ele.stock_ids.mapped('product_qty')
       if not len(mapped_ids):
-        return 0
+        continue
       ele.net_quantity = reduce((lambda x,y: x + y), mapped_ids)
     return
 
