@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+
+        <menuitem id="guards_sale_widget_root_menu"
+                  name="Sale Report"
+                  parent="guards_sale.root_menu_sale" sequence="20"/>
+
+        <record id="guards_sale_widget_client_action" model="ir.actions.client">
+            <field name="name">Sales Report</field>
+            <field name="tag">guards_sale_widget.guards_sale_report_widget</field>
+        </record>
+
+        <menuitem id="guards_sale_widget_menuitem" name="Report" parent="guards_sale_widget_root_menu"
+                  action="guards_sale_widget_client_action"/>
+
+        <template id="assets_backend" name="payments_import assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/guards_sale_widget/static/src/js/guards_sale_widget.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

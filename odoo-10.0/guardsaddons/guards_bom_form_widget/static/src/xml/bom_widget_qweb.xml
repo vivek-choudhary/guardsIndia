@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+  <t t-name="bomWidgetTemplateView">
+    <div class="col-sm-12"></div>
+  </t>
+
+  <t t-name="bomWidgetView">
+    <div class="col-sm-12">
+      <table class="bom-table table table-hover">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Inventory</th>
+            <th>Required Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <t t-foreach="data" t-as="product">
+            <tr>
+              <td><t t-esc="product[0]"/></td>
+              <td><t t-esc="product[2]"/></td>
+              <td t-if="product[1] &lt; 0">0</td>
+              <td t-else=""><t t-esc="product[1]"/></td>
+            </tr>
+          </t>
+        </tbody>
+      </table>
+    </div>
+  </t>
+
+</templates>

@@ -1,0 +1,86 @@
+<odoo>
+  <data>
+    <report
+      id="guards_sale_report"
+      model="guards.sale"
+      string="Sale Report"
+      report_type="qweb-pdf"
+      name="guards_sale.guard_sale_report_template"
+      file="sale_report"
+      attachment_use="True"
+    />
+
+    <template id="guard_sale_report_template">
+      <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+          <t t-call="report.external_layout">
+            <div class="page">
+
+              <div class="row">
+                <div class="col-sm-3">Invoice Number:  <t t-esc="o.invoice_number"/></div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-3">Date:  <t t-esc="o.sale_date"/></div>
+                <div class="col-sm-3"></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">Supplier:  <t t-esc="o.seller_company.name"/></div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-3">Amount:  <t t-esc="o.amount"/></div>
+                <div class="col-sm-3"></div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-3">Customer:  <t t-esc="o.customer_partner_id.name"/></div>
+                <div class="col-sm-3"></div>
+              </div>
+
+              <h3>Sale Products</h3>
+              <table class="bom-table table table-hover">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>BOM</th>
+                    <th>Product Quantity</th>
+                    <th>Unit Sale Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-foreach="o.sale_product_ids" t-as="sale_product">
+                    <tr>
+                      <td><t t-esc="sale_product.product_id.name"/></td>
+                      <td><t t-esc="sale_product.product_bom_id.name"/></td>
+                      <td><t t-esc="sale_product.quantity"/></td>
+                      <td><t t-esc="sale_product.unit_sale_price"/></td>
+                    </tr>
+                  </t>
+                </tbody>
+              </table>
+
+              <h3>Inventory Product Sheet</h3>
+              <table class="bom-table table table-hover">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Inventory</th>
+                    <th>Required Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-foreach="o.parse_string()" t-as="product">
+                    <tr>
+                      <td><t t-esc="product[0]"/></td>
+                      <td><t t-esc="product[2]"/></td>
+                      <td t-if="product[1] &lt; 0">0</td>
+                      <td t-else=""><t t-esc="product[1]"/></td>
+                    </tr>
+                  </t>
+                </tbody>
+              </table>
+              <p></p>
+            </div>
+          </t>
+        </t>
+      </t>
+    </template>
+  </data>
+</odoo>

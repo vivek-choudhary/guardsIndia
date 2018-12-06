@@ -6,7 +6,8 @@
       <field name="model">guards.product</field>
       <field name="arch" type="xml">
         <tree>
-          <field name="name" required="1"/>
+          <field name="name"/>
+          <field name="type"/>
         </tree>
       </field>
     </record>
@@ -24,6 +25,7 @@
             <group colspan="4">
               <group col="2">
                 <field name="name" required='1'/>
+                <field name="type" required="1"/>
                 <field name="description"/>
               </group>
               <group col="2">

@@ -12,6 +12,7 @@ class guardsPurchaseLines(models.Model):
   purchase_id = fields.Many2one('guards.purchase', string='Purchase')
   cost = fields.Float(string='Cost', default=0.0)
   total_cost = fields.Float(string='Total Cost', store=False, compute='_get_total_cost')
+  product_bom = fields.Many2one(comodel_name='guards.bom', string='Product BOM')
 
   @api.depends('cost', 'quantity')
   def _get_total_cost(self):
@@ -55,13 +56,25 @@ class guardsPurchase(models.Model):
     return True
 
   def update_status(self):
+    # Creation of 'IN' move lines as according the BOM provided.
     for element in self.purchase_lines:
-      values = {
-        'product_id': element.product_id.id,
-        'product_uom': element.product_uom.id,
-        'quantity': element.quantity
-      }
-      element.env['guards.product.inventory.wizard'].create_move(values)
+      if element.product_bom.id:
+        products = self.env['guards.bom'].get_product_quantites_dict(element.product_bom, element.quantity, product_dir={})
+        for product in products:
+          values = {
+            'product_id': products[product][0].id,
+            'product_uom': None,
+            'quantity': products[product][1]
+          }
+          element.env['guards.product.inventory.wizard'].create_move(values)
+      else:
+        values ={
+          'product_id': element.product_id.id,
+          'product_uom': None,
+          'quantity': element.quantity
+        }
+        element.env['guards.product.inventory.wizard'].create_move(values)
+
     self.status = 'confirm'
     return
 

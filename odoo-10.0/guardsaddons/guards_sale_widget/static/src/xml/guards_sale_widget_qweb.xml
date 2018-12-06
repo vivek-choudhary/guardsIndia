@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+  <t t-name="GuardsSaleWidgetTemplate">
+    <div class="col-sm-12" style="padding: 0 5px;">
+      <div class="form-inline">
+        <div class="form-group">
+          <label for="from-date">From</label>
+          <div class='input-group date datetimepicker '>
+            <input type='text' class="form-control" id="guards-sale-from"/>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="from-date">To</label>
+          <div class='input-group date datetimepicker'>
+            <input type='text' class="form-control" id="guards-sale-to"/>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="company" class="company-drop-down">Company</label>
+        </div>
+        <button class="btn btn-primary report sale-widget-get-report" name="get-report">Get Report</button>
+        <!--<button class="btn btn-primary xls-report sale-widget-download-report">Download Report</button>-->
+      </div>
+
+      <div class="render-section" style="max-height: 500px; overflow-y: scroll; margin-top: 50px;"></div>
+    </div>
+  </t>
+
+  <t t-name="SalesListTemplate">
+    <table class="table table-hover sale_table">
+      <thead>
+        <tr>
+          <th>Invoice Number</th>
+          <th>Sale Date</th>
+          <th>Customer</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Sale Products</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </t>
+
+  <t t-name="SaleWidgetProductTemplate">
+    <tr>
+      <td style="padding-left: 15px"><t t-esc="saleData.invoice_number"/></td>
+      <td><t t-esc="saleData.sale_date"/></td>
+      <td><t t-esc="saleData.customer_partner_id[1]"/></td>
+      <td><t t-esc="saleData.amount"/></td>
+      <td><t t-esc="saleData.status"/></td>
+      <td>
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <td><b>Product</b></td>
+              <td><b>Quantity</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <t t-foreach="saleLines" t-as='product'>
+              <tr>
+                <td><t t-esc="product.product_id[1]"/></td>
+                <td><t t-esc="product.quantity"/></td>
+              </tr>
+            </t>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </t>
+
+  <t t-name="SaleProductLines">
+    <t t-set="sale_product_lines" t-esc="sale.sale_product_lines()"/>
+  </t>
+
+  <t t-name="CompanyDropDown">
+    <select class="form-control" name="type" id="company" style="width: 200px">
+      <option value="all">All</option>
+      <t t-foreach="data" t-as='company'>
+        <option t-attf-value="{{company.id}}"><t t-esc="company.name"/></option>
+      </t>
+    </select>
+  </t>
+
+</templates>

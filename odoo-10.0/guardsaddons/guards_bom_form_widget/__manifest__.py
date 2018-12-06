@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Guards Sale",
+    'name': "Guards BOM Form Widget",
 
-    'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+    'summary': """Module for BOM widget""",
 
     'description': """
-        Long description of module's purpose
+        No description
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "Sudhanshu Gupta",
+    'website': "http://www.mesudhanshu.in",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
@@ -20,14 +18,16 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'guards_product', 'guards_stock','guards_product_bom'],
+    'depends': ['base', 'web', 'guards_sale', 'guards_product', 'guards_product_bom'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
-        'views/sale_report.xml'
+        'views/bom_widget.xml'
     ],
     # only loaded in demonstration mode
+    # 'demo': [
+    #     'demo/demo.xml',
+    # ],
+    'qweb': ['static/src/xml/*.xml'],
 }

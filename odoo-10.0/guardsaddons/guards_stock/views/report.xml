@@ -1,0 +1,37 @@
+<odoo>
+  <data>
+    <report
+      id="guards_product_inventory_report"
+      model="guards.product"
+      string="Inventory Report"
+      report_type="qweb-pdf"
+      name="guards_stock.guards_product_inventory_report_template"
+      file="invetory_report"
+      attachment_use="True"
+    />
+
+    <template id="guards_product_inventory_report_template">
+      <t t-call="report.html_container">
+        <t t-call="report.external_layout">
+          <div class="page">
+            <h3>Inventory Report</h3>
+            <table class="bom-table table table-hover">
+              <tbody>
+                <tr>
+                  <td><h4>Product</h4></td>
+                  <td><h4>Product Inventory</h4></td>
+                </tr>
+                <t t-foreach="docs" t-as="o">
+                  <tr>
+                  <td><t t-esc="o.name"/></td>
+                  <td><t t-esc="o.net_quantity"/></td>
+                  </tr>
+                </t>
+              </tbody>
+            </table>
+          </div>
+        </t>
+      </t>
+    </template>
+  </data>
+</odoo>

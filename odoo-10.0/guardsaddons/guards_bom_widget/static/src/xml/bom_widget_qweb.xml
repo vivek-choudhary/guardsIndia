@@ -37,7 +37,8 @@
           <tr>
             <td><t t-esc="product.name"/></td>
             <td><t t-esc="product.product_quantity"/></td>
-            <td><t t-esc="product.required_quantity"/></td>
+            <td t-if="product.required_quantity &lt; 0">0</td>
+            <td t-else=""><t t-esc="product.required_quantity"/></td>
           </tr>
         </t>
       </tbody>

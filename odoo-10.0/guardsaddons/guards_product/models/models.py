@@ -13,6 +13,7 @@ class guardsProducts(models.Model):
   sale_price = fields.Float(string='Sale Price')
   cost_price = fields.Float(string='Cost Price')
   active = fields.Boolean(string='Active', default=True)
+  type = fields.Selection(selection=[('raw', 'Raw'), ('bom', 'BOM')], string='Product Type', default='raw')
 
   _sql_constraints = [
     ('guards_product_uniqueness',

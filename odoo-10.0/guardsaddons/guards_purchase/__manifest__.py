@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "guards_purchase",
+    'name': "Guards Purchase",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Purchase Module for Products""",
 
     'description': """
-        Long description of module's purpose
+        Purchase form with bifurcation of purchase products depending on the BOM given and updating
+        the raw materials according to the purchased quantity.
+        Depends: Guards Stock, Guards Product, Guards Product BOM
     """,
 
     'author': "My Company",
@@ -20,7 +21,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'guards_stock', 'guards_product'],
+    'depends': ['base', 'guards_stock', 'guards_product', 'guards_product_bom'],
 
     # always loaded
     'data': [

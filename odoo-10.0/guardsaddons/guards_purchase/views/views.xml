@@ -9,7 +9,8 @@
           <field name="invoice_number" string="Invoice Number"/>
           <field name="partner_id"/>
           <field name="casting_weight"/>
-          <field name="purchase_date"/>
+          <field name="purchase_date" string="Purchase Date"/>
+          <field name="status" string="Status"/>
         </tree>
       </field>
     </record>
@@ -21,9 +22,10 @@
       <field name="arch" type="xml">
         <form>
           <header>
+            <field name="id" invisible="1"/>
             <field name="status" widget="statusbar"/>
             <button name="update_status" class='btn btn_primary'
-                    attrs="{'invisible':[('status','=','confirm')]}"
+                    attrs="{'invisible':['|',('status','=','confirm'), ('id','=', False)]}"
                     string="Confirm" type="object"/>
           </header>
           <sheet>
@@ -42,15 +44,19 @@
                 <field name="purchase_lines" attrs="{'readonly':[('status','=','confirm')]}">
                   <tree editable="bottom">
                     <field name="product_id" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+                    <field name="product_bom" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"
+                               domain="[('product_id','=', product_id)]"/>
                     <field name="quantity"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+                    <!--<field name="product_uom" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>-->
                     <field name="cost"/>
                   </tree>
                   <form>
                     <sheet>
                       <group>
                         <field name="product_id" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
-                        <field name="product_uom" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+                        <!--<field name="product_uom" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>-->
+                        <field name="product_bom" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"
+                               domain="[('product_id','=', product_id)]"/>
                         <field name="quantity"/>
                         <field name="cost"/>
                         <field name="total_cost"/>

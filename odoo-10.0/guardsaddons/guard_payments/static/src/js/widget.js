@@ -80,6 +80,7 @@ openerp.guard_payments = function(instance, local) {
             return params_date;
         },
         sale_report: function(from_date, to_date, company){
+            debugger
             var model = new instance.web.Model('guard.invoices');
             var filter = ['|','&',['due_date','>',this.get_date(from_date)],
                                     ['due_date','<=',this.get_date(to_date)],['due_date','<=',new Date().toDateString()]];

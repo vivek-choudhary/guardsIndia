@@ -10,8 +10,8 @@
         Long description of module's purpose
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "Sudhanshu Gupta",
+    'website': "http://www.mesudhanshu.in",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
@@ -27,7 +27,8 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
-        'views/inventory_wizard_view.xml'
+        'views/inventory_wizard_view.xml',
+        'views/report.xml'
     ],
     # only loaded in demonstration mode
 }

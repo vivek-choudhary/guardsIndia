@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+        <template id="assets_backend" name="payments_import assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/guards_bom_form_widget/static/src/js/bom_form_widget.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

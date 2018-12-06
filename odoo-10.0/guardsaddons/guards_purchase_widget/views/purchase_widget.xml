@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+
+        <menuitem id="guards_purchase_widget_root_menu"
+                  name="Purchase Report"
+                  parent="guards_purchase.menu_root" sequence="20"/>
+
+        <record id="guards_purchase_widget_client_action" model="ir.actions.client">
+            <field name="name">Purchase Report</field>
+            <field name="tag">guards_purchase_widget.guards_purchase_report_widget</field>
+        </record>
+
+        <menuitem id="guards_purchase_widget_menuitem" name="Report" parent="guards_purchase_widget_root_menu"
+                  action="guards_purchase_widget_client_action"/>
+
+        <template id="assets_backend" name="payments_import assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/guards_purchase_widget/static/src/js/guards_purchase_widget.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
