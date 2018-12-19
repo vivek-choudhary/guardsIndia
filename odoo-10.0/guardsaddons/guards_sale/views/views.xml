@@ -36,7 +36,6 @@
                        string="Invoice Number"
                         attrs="{'readonly':[('status','=','confirm')]}"/>
                 <field name="seller_company" string="Supplier"
-                       domain="[('is_company','=',True)]"
                        attrs="{'readonly':[('status','=','confirm')]}"
                        options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}" />
                 <field name="customer_partner_id"

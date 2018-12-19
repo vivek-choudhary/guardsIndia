@@ -46,7 +46,7 @@ class GuardsSale(models.Model):
     customer_partner_id = fields.Many2one(comodel_name='res.partner', string='Customer', required=True)
     sale_product_ids = fields.One2many(comodel_name='guards.sale.product', inverse_name='sale_id',string='Products')
     sale_date = fields.Date(string='Sale Date', required=True)
-    seller_company = fields.Many2one(comodel_name='res.partner', string='Seller Company', required=True)
+    seller_company = fields.Many2one(comodel_name='res.company', string='Seller Company', required=True)
     amount = fields.Float(compute='_get_total_amount', string='Amount', store=True)
     status = fields.Selection(selection=[('draft','Draft'),('confirm','Confirm')])
     invoice_number = fields.Char(string='Invoice Number')

@@ -8,7 +8,7 @@ class GuardsBomProducts(models.Model):
   _description = 'Guards Product BOM'
 
   product_id = fields.Many2one(comodel_name='guards.product', string='Product', required=True)
-  quantity = fields.Integer(string='Quantity', required=True)
+  quantity = fields.Float(string='Quantity', required=True)
   bom_id = fields.Many2one(comodel_name='guards.bom')
   product_uom_id = fields.Many2one('guards.stock.uom', string='Unit')
 

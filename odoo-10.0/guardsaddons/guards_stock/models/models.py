@@ -14,7 +14,7 @@ class stockMoves(models.Model):
   _description = 'Guards Stock Move'
 
   type = fields.Selection(selection=[('in','In'), ('out','Out')], string='Move Type')
-  quantity = fields.Integer(string='Move Quantity', default=0)
+  quantity = fields.Float(string='Move Quantity', default=0)
   stock_id = fields.Many2one(comodel_name='guards.stock', string='Stock Reference' )
   product_id = fields.Many2one(comodel_name='guards.product', string='Product')
   product_uom = fields.Many2one(comodel_name='guards.stock.uom', string='Unit')
@@ -25,7 +25,7 @@ class guardsStock(models.Model):
   _description = 'Guard Stock'
 
   product_id = fields.Many2one(comodel_name='guards.product', string='Product', delegate=True)
-  product_qty = fields.Integer(string='Product Quantity', compute='_get_moves_quantity')
+  product_qty = fields.Float(string='Product Quantity', compute='_get_moves_quantity')
   product_uom = fields.Many2one(comodel_name='guards.stock.uom', string='Unit')
   move_ids = fields.One2many(comodel_name='guards.stock.move', inverse_name='stock_id')
   product_qty_state = fields.Selection(selection=[('ok', 'OK'), ('danger', 'Danger'), ('negative', 'Negative')])
@@ -68,7 +68,7 @@ class guardsProductIntheritStock(models.Model):
   _description = 'Guards Product Inherit Stock'
 
   stock_ids = fields.One2many(comodel_name='guards.stock', string='Stocks', inverse_name='product_id')
-  net_quantity = fields.Integer(compute="_inventory_value", store=False)
+  net_quantity = fields.Float(compute="_inventory_value", store=False)
 
   @api.depends('stock_ids')
   def _inventory_value(self):
