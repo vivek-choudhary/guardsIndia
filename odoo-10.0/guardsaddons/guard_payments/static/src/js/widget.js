@@ -75,15 +75,25 @@ openerp.guard_payments = function(instance, local) {
             var date_array = [];
             if(params_date.length){
                 date_array = params_date.split('/');
-                return new Date(date_array[2], date_array[1], date_array[0]);
+                return new Date(date_array[2], parseInt(date_array[1])-1, date_array[0]);
             }
             return params_date;
         },
+        get_date_filter: function(from_date, to_date){
+            if(from_date != '' && to_date != ''){
+                return ['&',['due_date','>',this.get_date(from_date).toDateString()],['due_date','<=',this.get_date(to_date).toDateString()]];
+            }
+            else if(from_date != '' && to_date == ''){
+                return ['&',['due_date','>',this.get_date(from_date).toDateString()],['due_date','<=',new Date().toDateString()]];
+            }
+            else if(from_date == '' && to_date != ''){
+                return [['due_date','>',this.get_date(from_date).toDateString()]];
+            }
+
+        },
         sale_report: function(from_date, to_date, company){
-            debugger
             var model = new instance.web.Model('guard.invoices');
-            var filter = ['|','&',['due_date','>',this.get_date(from_date)],
-                                    ['due_date','<=',this.get_date(to_date)],['due_date','<=',new Date().toDateString()]];
+            var filter = this.get_date_filter(from_date, to_date);
             if(company != 'all') filter.push(['customer','=',parseInt(company)]);
             model.query(['invoice_number', 'invoice_date', 'customer','company',
                 'amount', 'due', 'overdue', 'overdue_flag','paid_flag','payment_date', 'payment_due'])
@@ -94,8 +104,7 @@ openerp.guard_payments = function(instance, local) {
         },
         purchase_report: function(from_date, to_date, company){
             var model = new instance.web.Model('guard.payments');
-            var filter = ['|','&',['due_date','>',this.get_date(from_date)],['due_date','<=',this.get_date(to_date)],
-                            ['due_date','<=',new Date().toDateString()]];
+            var filter = this.get_date_filter(from_date, to_date);
             if(company!='all') filter.push(['party_company','=',parseInt(company)]);
             model.query(['bill_number','bill_date', 'party_company','company', 'amount',
                 'due', 'overdue', 'overdue_flag','due_flag','paid_flag','payment_date', 'due_days'])
