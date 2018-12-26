@@ -46,6 +46,12 @@ class guardsPurchase(models.Model):
   purchase_date = fields.Date(string='Purchase Date', required=True)
   remark = fields.Text(string='Remark')
 
+  @api.multi
+  def unlink(self):
+    from odoo import exceptions
+    for ele in self:
+      if ele.status == 'confirm':
+        raise exceptions.UserError("Cannot Delete Confirmed Purchase")
 
   def _get_total_cost(self):
     for ele in self:

@@ -141,12 +141,9 @@ class GuardsSale(models.Model):
 
       return True
 
-    def get_sale_product_lines(self):
-      pass
-
-    def parse_string(self):
-      result = []
-      for ele in self.bom_product_quantities[1:len(self.bom_product_quantities)-1].split(','):
-        result.append(ele.split(':'))
-      return result
-      pass
+    @api.multi
+    def unlink(self):
+      from odoo import exceptions
+      for ele in self:
+        if ele.status == 'confirm':
+          raise exceptions.UserError("Cannot Delete Confirmed Sales")
