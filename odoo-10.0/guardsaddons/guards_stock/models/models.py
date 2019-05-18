@@ -87,6 +87,6 @@ class guardsProductIntheritStock(models.Model):
       'view_type': 'form',
       'view_mode': 'form',
       'context': {'default_product_id': self.id},
-      'view_id': self.env.ref('guards_stock.product_update_inventory_view',False).id,
+      'view_id': self.env.ref('guards_stock.product_update_inventory_view', False).id,
       'target': 'new',
     }
