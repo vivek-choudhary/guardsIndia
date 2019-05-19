@@ -11,7 +11,7 @@ class GuardsSaleProduct(models.Model):
   product_uom_id = fields.Many2one(comodel_name='guards.stock.uom', string='Product UOM')
   sale_id = fields.Many2one(comodel_name='guards.sale', string='Sale ID')
   product_bom_id = fields.Many2one(comodel_name='guards.bom', string='BOM')
-  quantity = fields.Integer(string='Product Quantity')
+  quantity = fields.Float(string='Product Quantity')
   unit_sale_price = fields.Float(string='Unit Sale Price')
   bom_sale_price = fields.Float(string='System Sale Price', compute='_compute_bom_sale_price')
   user_sale_price = fields.Float(string='User Sale Price', compute='_compute_user_sale_price')

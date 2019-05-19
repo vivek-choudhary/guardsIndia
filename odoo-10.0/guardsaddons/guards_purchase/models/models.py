@@ -7,12 +7,18 @@ class guardsPurchaseLines(models.Model):
   _name = 'guards.purchase.line'
 
   product_id = fields.Many2one('guards.product', string='Product', required=True)
-  quantity = fields.Integer('Quantity', required=True)
+  quantity = fields.Float('Quantity', required=True)
   product_uom = fields.Many2one('guards.stock.uom', string='Product Unit')
   purchase_id = fields.Many2one('guards.purchase', string='Purchase')
   cost = fields.Float(string='Cost', default=0.0)
   total_cost = fields.Float(string='Total Cost', store=False, compute='_get_total_cost')
   product_bom = fields.Many2one(comodel_name='guards.bom', string='Product BOM')
+  product_type = fields.Char(string='Product Type', compute='_get_product_type', store=False)
+
+  @api.depends('product_id')
+  def _get_product_type(self):
+    for product in self:
+      product.product_type = product.product_id.type if product.product_id.type else ''
 
   @api.depends('cost', 'quantity')
   def _get_total_cost(self):

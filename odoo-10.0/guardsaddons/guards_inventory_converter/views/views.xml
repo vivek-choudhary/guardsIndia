@@ -44,5 +44,30 @@
       </field>
     </record>
 
+    <record model="ir.ui.view" id="guards_inventory_converter.inherit_guards_purchase_form">
+      <field name="name">Purchase Form Inherit</field>
+      <field name="model">guards.purchase</field>
+      <field name="inherit_id" ref="guards_purchase.guards_purchase_form"></field>
+      <field name="arch" type="xml">
+        <field name="purchase_lines" position="replace">
+          <field name="purchase_lines" attrs="{'readonly':[('status','=','confirm')]}">
+            <tree editable="bottom">
+              <field name="product_type" invisible="1"/>
+              <field name="product_id" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+              <field name="product_bom" options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"
+                         domain="[('product_id','=', product_id)]" 
+                         attrs="{'readonly':[('product_type','=','raw')], 'required':[('product_type','=','bom')]}"/>
+              <field name="product_uom" required='1'
+                     options="{'no_open': True, 'no_create_edit':True, 'no_quick_create':True, 'no_create': True}"/>
+              <field name="input_quantity" required="True" />
+              <field name="cost"/>
+              <field name="quantity" invisible="1" />
+            </tree>
+          </field>
+        </field>
+      </field>
+    </record>
+
+
   </data>
 </odoo>
